@@ -10,7 +10,7 @@ Sutton, George P., Biblarz, Oscar. Rocket Propulsion Elements (8th Edition). 201
 This document follows the symbol and formulation conventions used in 
 Rocket Propulsion Elements (Sutton).
 
-## Assumptions for ideal rocket:
+## Assumptions for ideal rocket
 1.    The working substance (or chemical reaction products) is homogeneous.
 2.    All the species of the working fluid are gaseous. Any condensed phases (liquid or solid) add a negligible amount to the total mass.
 3.    The working substance obeys the perfect gas law.
