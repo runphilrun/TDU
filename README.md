@@ -24,4 +24,6 @@ Rocket Propulsion Elements (Sutton).
 11.   Stored propellants are at room temperature. Cryogenic propellants are at their boiling points.
 
 ## Usage
-how to run file with configs
+Edit *config.ini* to set values for the propellant gas properties, nozzle mass properties, and chamber thermodynamic properties. By default, the values assume gaseous Nitrogen propellant, Aluminum T6-6061 nozzle .125" thick, chamber pressure at around 300 psi and chamber temperature at 273 K.
+
+
