@@ -4,7 +4,7 @@ Thruster nozzle design tool written in python
 ## Purpose
 Aid design and analysis of engine nozzles for SmallSat and CubeSat monopropellant thrusters in a vacuum.
 
-## References: 
+## References 
 Sutton, George P., Biblarz, Oscar. Rocket Propulsion Elements (8th Edition). 2010.
 
 This document follows the symbol and formulation conventions used in 
@@ -22,3 +22,6 @@ Rocket Propulsion Elements (Sutton).
 9.    The gas velocity, pressure, temperature, and density are all uniform across any section normal to the nozzle axis.
 10.   Chemical equilibrium is established within the rocket chamber and the gas composition does not change in the nozzle (frozen flow).
 11.   Stored propellants are at room temperature. Cryogenic propellants are at their boiling points.
+
+## Usage
+how to run file with configs
