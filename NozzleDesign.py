@@ -32,19 +32,22 @@ class Nozzle(object):
 
     @property
     def e(self):
-        # expansion ratio
-        return self.e
+        return self._e
 
     @e.setter
     def e(self, e):
         if e < 1:
             raise Exception("Expansion ratio must be greater than 1")
         else:
-            self.e = e
+            self._e = e
 
     @property
     def At(self):
-        return self.At
+        return self._At
+
+    @At.setter
+    def At(self, val):
+        self._At = val
 
     def Ae(self):
         if self.At*self.e > .1:
@@ -52,9 +55,10 @@ class Nozzle(object):
         else:
             return self.At*self.e
 
+    @property
     def h(self):
-        Re = math.sqrt(float(self.Ae) / math.pi)
-        Rt = math.sqrt(float(self.At) / math.pi)
+        Re = math.sqrt(self.Ae / math.pi)
+        Rt = math.sqrt(self.At / math.pi)
         alpha = math.radians(15)
         return Re / math.tan(alpha) - Rt / math.tan(alpha)
 
@@ -95,7 +99,9 @@ def init():
 
 def main():
     prop, noz, chbr = init()
-    print('didnt break')
+    noz.At = .02
+    noz.e = 1.5
+    print(noz.At, noz.e, noz.Ae)
     return
 
 if __name__ == "__main__":
