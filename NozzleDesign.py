@@ -8,29 +8,95 @@ import configparser
 import math
 
 # set global constants
-g0 = 9.81  # Standard gravity [m/s^2]
-R0 = .008314  # Universal gas constant [J/K*kmol]
-# load values from config.ini
-parser = configparser.ConfigParser()
-parser.read('config.ini')
-# propellant properties
-propName = parser.get('Propellant', 'name')  # prop name
-k = parser.getfloat('Propellant', 'k')  # specific heat ratio
-mMol = parser.getfloat('Propellant', 'mMol')  # molecular weight
-# nozzle properties
-nozMatl = parser.get('Nozzle', 'matl')  # nozzle material name
-thk = parser.getfloat('Nozzle', 'thk')  # nozzle thickness
-rhoNoz = parser.getfloat('Nozzle', 'rhoNoz')  # nozzle density
-# chamber properties
-Tc = parser.getfloat('Chamber', 'Tc')  # chamber temp
-Pc = parser.getfloat('Chamber', 'Pc')  # chamber pressure
+global g0
+global R0
+g0 = 9.81       # [m/s^2] Standard gravity
+R0 = .008314    # [J/K*kmol] Universal gas constant
 
-# print summary
-print('Propellant:', propName)
-print('Chamber:', Tc, 'K,', Pc, 'bar')
-print('Nozzle:', nozMatl, '@', thk, 'm thickness')
 
-# get inputs
-mdot = float(input('Mass flow rate [kg/s]: '))  # mass flow rate [kg/s]
-maxD = float(input('Max nozzle exit diameter [cm]: '))
-maxAe = math.pi*pow(2, .5*maxD/100)  # max exit area [m]
+class Prop(object):
+    def __init__(self, name, k, mMol):
+        self.name = name
+        self.k = k
+        self.mMol = mMol
+
+    def gasconstant(self):
+        return R0/self.mMol
+
+
+class Nozzle(object):
+    def __init__(self, matl, thk, rho):
+            self.matl = matl
+            self.thk = thk
+            self.rho = rho
+
+    @property
+    def e(self):
+        # expansion ratio
+        return self.e
+
+    @e.setter
+    def e(self, e):
+        if e < 1:
+            raise Exception("Expansion ratio must be greater than 1")
+        else:
+            self.e = e
+
+    @property
+    def At(self):
+        return self.At
+
+    def Ae(self):
+        if self.At*self.e > .1:
+            raise Exception("Exit area larger than 10 cm")
+        else:
+            return self.At*self.e
+
+    def h(self):
+        Re = math.sqrt(float(self.Ae) / math.pi)
+        Rt = math.sqrt(float(self.At) / math.pi)
+        alpha = math.radians(15)
+        return Re / math.tan(alpha) - Rt / math.tan(alpha)
+
+
+class Chamber(object):
+    def __init__(self, Tc, Pc):
+        self.Tc = Tc
+        self.Pc = Pc
+
+
+def init():
+    config = configparser.ConfigParser()
+    config.read('config.ini')
+    prop = Prop(
+        config.get('Prop', 'name'),
+        config.getfloat('Prop', 'k'),
+        config.getfloat('Prop', 'mMol'),
+    )
+    noz = Nozzle(
+        config.get('Nozzle', 'matl'),
+        config.getfloat('Nozzle', 'thk'),
+        config.getfloat('Nozzle', 'rho')
+    )
+    chbr = Chamber(
+        config.getfloat('Chamber', 'Tc'),
+        config.getfloat('Chamber', 'Pc'),
+    )
+    # print summary
+    print('Propellant:', prop.name)
+    print('Chamber:', chbr.Tc, 'K,', chbr.Pc, 'bar')
+    print('Nozzle:', noz.matl, '@', noz.thk, 'm thick')
+
+    # get inputs
+    mdot = float(input('Mass flow rate [kg/s]: '))  # mass flow rate [kg/s]
+
+    return prop, noz, chbr
+
+
+def main():
+    prop, noz, chbr = init()
+    print('didnt break')
+    return
+
+if __name__ == "__main__":
+    main()
