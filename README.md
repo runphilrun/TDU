@@ -2,7 +2,7 @@
 Thruster nozzle design tool written in Python
 
 ## Purpose
-Aid design and analysis of engine nozzles for SmallSat and CubeSat monopropellant thrusters in space.
+Simulate the performance of a thruster in space for a given set of parameters and output performance metrics.
 
 ## About & Documentation
 All background, documentation, and theory can be found in the [Wiki](https://github.com/runphilrun/ThrusterDesign/wiki).
