@@ -29,6 +29,7 @@ class Nozzle(object):
         self.matl = matl
         self.thk = thk
         self.rho = rho
+        self._e = 1
 
     @property
     def e(self):
@@ -36,26 +37,36 @@ class Nozzle(object):
 
     @e.setter
     def e(self, e):
-        if e < 1:
-            raise Exception("Expansion ratio must be greater than 1")
-        else:
-            self._e = e
+        if self._e < 1:
+            raise Exception("Expansion ratio must be greater than 1.")
+        self._e = e
+
+    def set_e(self, Ae, At):
+        self._e = Ae / At
 
     @property
     def At(self):
-        return self._At
+        if self._At == 0:
+            raise Exception("Throat area not set. Set At or define Ae & e.")
+        return self._Ae / self._e
 
     @At.setter
-    def At(self, val):
-        self._At = val
-
-    def Ae(self):
-        if self.At * self.e > .1:
-            raise Exception("Exit area larger than 10 cm")
-        else:
-            return self.At * self.e
+    def At(self, At):
+        self._At = At
+        self._Ae = self._At * self._e
 
     @property
+    def Ae(self):
+        if self._Ae == 0:
+            raise Exception("Exit area not set. Set Ae or define At & e.")
+        else:
+            return self._At * self._e
+
+    @Ae.setter
+    def Ae(self, Ae):
+        self._Ae = Ae
+        self._At = self._Ae / self._e
+
     def h(self):
         Re = math.sqrt(self.Ae / math.pi)
         Rt = math.sqrt(self.At / math.pi)
@@ -74,7 +85,14 @@ class Thruster(object):
         self.prop = prop
         self.noz = noz
         self.chbr = chbr
+        self.mdot = 0
 
+    @property
+    def mdot(self):
+        return self._mdot
+    @mdot.setter
+    def mdot(self, mdot):
+        self._mdot = mdot
 
 def init():
     config = configparser.ConfigParser()
@@ -93,22 +111,30 @@ def init():
         config.getfloat('Chamber', 'Tc'),
         config.getfloat('Chamber', 'Pc'),
     )
+    thruster = Thruster(
+        prop,
+        noz,
+        chbr
+    )
     # print summary
     print('Propellant:', prop.name)
     print('Chamber:', chbr.Tc, 'K,', chbr.Pc, 'bar')
     print('Nozzle:', noz.matl, '@', noz.thk, 'm thick')
 
     # get inputs
-    mdot = float(input('Mass flow rate [kg/s]: '))  # mass flow rate [kg/s]
+    thruster.mdot = float(input('Mass flow rate [kg/s]: '))  # mass flow rate [kg/s]
 
-    return prop, noz, chbr
+    return thruster
 
 
 def main():
-    prop, noz, chbr = init()
+    thruster = init()
+    noz = thruster.noz
+    noz.e = 2
     noz.At = .02
-    noz.e = 1.5
-    print(noz.At, noz.e, noz.Ae)
+    noz.Ae = 10
+    noz.e = 500
+    print(noz.At, noz.e, thruster.mdot, thruster.noz.Ae)
     return
 
 
