@@ -48,7 +48,8 @@ class Nozzle(object):
     def At(self):
         if self._At == 0:
             raise Exception("Throat area not set. Set At or define Ae & e.")
-        return self._Ae / self._e
+        self._At = self._Ae / self._e
+        return self._At
 
     @At.setter
     def At(self, At):
@@ -60,7 +61,8 @@ class Nozzle(object):
         if self._Ae == 0:
             raise Exception("Exit area not set. Set Ae or define At & e.")
         else:
-            return self._At * self._e
+            self._Ae = self._At * self._e
+            return self._Ae
 
     @Ae.setter
     def Ae(self, Ae):
@@ -130,11 +132,18 @@ def init():
 def main():
     thruster = init()
     noz = thruster.noz
-    noz.e = 2
-    noz.At = .02
-    noz.Ae = 10
-    noz.e = 500
-    print(noz.At, noz.e, thruster.mdot, thruster.noz.Ae)
+    noz.e = 2 # set expansion ratio
+    noz.At = .02 # set throat area
+    noz.Ae = 10 # set exit area -> throat area changes to maintain e
+    noz.e = 500 # set new expansion ratio -> At and Ae
+    noz.set_e(500,250)
+    print('debug:', noz.At, noz.e, thruster.mdot, thruster.noz.Ae,noz.e == 2)
+
+    print('Restructure so that At remains fixed at its set value \n'
+          'e is varied as the controlled value (for graphs, etc) \n'
+          'and Ae is derived from At * e. \n\n'
+          'Since At is determined by mass flow rate and prop, this is \n'
+          'acceptable.')
     return
 
 
