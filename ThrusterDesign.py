@@ -41,14 +41,13 @@ class Nozzle(object):
             raise Exception("Expansion ratio must be greater than 1.")
         self._e = e
 
-    def set_e(self, Ae, At):
+    def solve_e(self, Ae, At):
         self._e = Ae / At
 
     @property
     def At(self):
-        if self._At == 0:
+        if not (self._At > 0):
             raise Exception("Throat area not set. Set At or define Ae & e.")
-        self._At = self._Ae / self._e
         return self._At
 
     @At.setter
@@ -58,7 +57,7 @@ class Nozzle(object):
 
     @property
     def Ae(self):
-        if self._Ae == 0:
+        if not (self._Ae > 0):
             raise Exception("Exit area not set. Set Ae or define At & e.")
         else:
             self._Ae = self._At * self._e
@@ -66,8 +65,19 @@ class Nozzle(object):
 
     @Ae.setter
     def Ae(self, Ae):
-        self._Ae = Ae
-        self._At = self._Ae / self._e
+        print('Enter number to select option.')
+        option = input('[1] Update At from e | '
+                       '[2] Update e from At | '
+                       '[3] Cancel'
+                       '\nSelection: ')
+        if option == '1':
+            self._Ae = Ae
+            self._At = self._Ae / self._e
+        elif option == '2':
+            self._Ae = Ae
+            self._e = self._Ae / self._At
+        else:
+            print('Operation cancelled! Ae not set.')
 
     def h(self):
         Re = math.sqrt(self.Ae / math.pi)
@@ -135,15 +145,9 @@ def main():
     noz.e = 2 # set expansion ratio
     noz.At = .02 # set throat area
     noz.Ae = 10 # set exit area -> throat area changes to maintain e
-    noz.e = 500 # set new expansion ratio -> At and Ae
-    noz.set_e(500,250)
+    noz.e = 500 # set new expansion ratio -> At and Ae do not update until they are called
+    noz.solve_e(500,250)
     print('debug:', noz.At, noz.e, thruster.mdot, thruster.noz.Ae,noz.e == 2)
-
-    print('Restructure so that At remains fixed at its set value \n'
-          'e is varied as the controlled value (for graphs, etc) \n'
-          'and Ae is derived from At * e. \n\n'
-          'Since At is determined by mass flow rate and prop, this is \n'
-          'acceptable.')
     return
 
 
