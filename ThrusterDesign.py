@@ -31,6 +31,19 @@ class Nozzle(object):
         self.rho = rho
         self._e = 1
 
+    def emode(self):
+        return self._emode
+
+    def set_emode(self):
+        print('Enter number to select mode.')
+        option = input('[1] Update At from e | '
+                       '[2] Update e from At | '
+                       '[3] Cancel'
+                       '\nSelection: ')
+        if not (option == '1' or option == '2'):
+            print('Operation cancelled! Mode not set.')
+        self._emode = option
+
     @property
     def e(self):
         return self._e
@@ -65,19 +78,13 @@ class Nozzle(object):
 
     @Ae.setter
     def Ae(self, Ae):
-        print('Enter number to select option.')
-        option = input('[1] Update At from e | '
-                       '[2] Update e from At | '
-                       '[3] Cancel'
-                       '\nSelection: ')
-        if option == '1':
+
+        if self._emode == '1':
             self._Ae = Ae
             self._At = self._Ae / self._e
-        elif option == '2':
+        elif self._emode == '2':
             self._Ae = Ae
             self._e = self._Ae / self._At
-        else:
-            print('Operation cancelled! Ae not set.')
 
     def h(self):
         Re = math.sqrt(self.Ae / math.pi)
@@ -142,6 +149,7 @@ def init():
 def main():
     thruster = init()
     noz = thruster.noz
+    noz.set_emode()
     noz.e = 2 # set expansion ratio
     noz.At = .02 # set throat area
     noz.Ae = 10 # set exit area -> throat area changes to maintain e
