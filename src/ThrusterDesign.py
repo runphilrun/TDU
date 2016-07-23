@@ -8,6 +8,8 @@ import configparser
 import math
 
 # set global constants
+global g0
+global R0
 g0 = 9.81  # [m/s^2] Standard gravity
 R0 = .008314  # [J/K*kmol] Universal gas constant
 
@@ -28,22 +30,18 @@ class Nozzle(object):
         self.thk = thk
         self.rho = rho
         self._e = 1
-        self._emode = '1'
 
     def emode(self):
         return self._emode
 
     def set_emode(self):
-        default = '1'
         print('Enter number to select mode.')
-        option = input('[1] Update At from e (default)| '
+        option = input('[1] Update At from e | '
                        '[2] Update e from At | '
                        '[3] Cancel'
                        '\nSelection: ')
-
         if not (option == '1' or option == '2'):
-            print('Operation cancelled! Mode set to default =',default)
-            option = default
+            print('Operation cancelled! Mode not set.')
         self._emode = option
 
     @property
@@ -52,7 +50,7 @@ class Nozzle(object):
 
     @e.setter
     def e(self, e):
-        if e < 1:
+        if self._e < 1:
             raise Exception("Expansion ratio must be greater than 1.")
         self._e = e
 
@@ -80,14 +78,13 @@ class Nozzle(object):
 
     @Ae.setter
     def Ae(self, Ae):
+
         if self._emode == '1':
             self._Ae = Ae
             self._At = self._Ae / self._e
         elif self._emode == '2':
             self._Ae = Ae
             self._e = self._Ae / self._At
-        else:
-            raise Exception('emode not set! Execute nozzle.set_emode() and Choose option 1 or 2')
 
     def h(self):
         Re = math.sqrt(self.Ae / math.pi)
@@ -112,15 +109,13 @@ class Thruster(object):
     @property
     def mdot(self):
         return self._mdot
-
     @mdot.setter
     def mdot(self, mdot):
         self._mdot = mdot
 
-
-def set_fromconfig(filename):
+def init():
     config = configparser.ConfigParser()
-    config.read(filename)
+    config.read('config.ini')
     prop = Prop(
         config.get('Prop', 'name'),
         config.getfloat('Prop', 'k'),
@@ -141,24 +136,12 @@ def set_fromconfig(filename):
         chbr
     )
     # print summary
-    print('\nSettings retrieved from',filename,'\n------')
     print('Propellant:', prop.name)
     print('Chamber:', chbr.Tc, 'K,', chbr.Pc, 'bar')
     print('Nozzle:', noz.matl, '@', noz.thk, 'm thick')
-    print('------')
-    return thruster
-
-
-def init():
-    thruster = set_fromconfig('config.ini')
 
     # get inputs
-    thruster.noz.set_emode()
-    thruster.mdot = float(input('Mass flow rate, mdot [kg/s]: '))  # mass flow rate [kg/s]
-
-    print(thruster.noz.emode)
-    if thruster.noz.emode == '1':
-        thruster.noz.e = float(input('Expansion ratio, e [-]: '))
+    thruster.mdot = float(input('Mass flow rate [kg/s]: '))  # mass flow rate [kg/s]
 
     return thruster
 
@@ -166,7 +149,13 @@ def init():
 def main():
     thruster = init()
     noz = thruster.noz
-
+    noz.set_emode()
+    noz.e = 2 # set expansion ratio
+    noz.At = .02 # set throat area
+    noz.Ae = 10 # set exit area -> throat area changes to maintain e
+    noz.e = 500 # set new expansion ratio -> At and Ae do not update until they are called
+    noz.solve_e(500,250)
+    print('debug:', noz.At, noz.e, thruster.mdot, thruster.noz.Ae,noz.e == 2)
     return
 
 
