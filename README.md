@@ -3,11 +3,11 @@ Tool to aid in design of small monopropellant thrusters.
 
 > *[View this project on STEMN](http://stemn.com/projects/thruster-design-tool)*
 
-
+[![GitHub version](https://badge.fury.io/gh/runphilrun%2FThrusterDesign.svg)](https://badge.fury.io/gh/runphilrun%2FThrusterDesign)
+[![License](https://img.shields.io/github/license/runphilrun/ThrusterDesign.svg?style=flat-square)](https://github.com/runphilrun/ThrusterDesign/blob/master/LICENSE.md)
 [![GitHub issues](https://img.shields.io/github/issues/runphilrun/ThrusterDesign.svg)](https://github.com/runphilrun/ThrusterDesign/issues)
 [![GitHub forks](https://img.shields.io/github/forks/runphilrun/ThrusterDesign.svg)](https://github.com/runphilrun/ThrusterDesign/network)
 [![GitHub stars](https://img.shields.io/github/stars/runphilrun/ThrusterDesign.svg)](https://github.com/runphilrun/ThrusterDesign/stargazers)
-[![License](https://img.shields.io/github/license/runphilrun/ThrusterDesign.svg?style=flat-square)](https://github.com/runphilrun/ThrusterDesign/blob/master/LICENSE.md)
 
 
 ## Abstract
