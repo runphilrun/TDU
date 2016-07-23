@@ -1,0 +1,4 @@
+include *.md
+include src/**/*
+include .gitignore
+include .travis.yml

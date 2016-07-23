@@ -3,6 +3,12 @@ Thruster nozzle design tool written in Python.
 
 > *[View this project on STEMN](http://stemn.com/projects/thruster-design-tool)*
 
+```bash
+$ python setup.py build
+$ python setup.py install
+$ thruster-designer --help
+```
+
 ## Abstract
 The thruster's nozzle, propellant, and chamber conditions each have a huge impact on performance. The fluid mechanics that model engine effectiveness are pretty complicated, unfortunately. The purpose of this script is to make it easy to see how tweaks in nozzle geometry, propellants, and chamber conditions affect performance in order to find the optimal design solution.
 
