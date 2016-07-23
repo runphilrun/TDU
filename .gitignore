@@ -1,3 +1,5 @@
+.tox/
+dist/
 .idea/
 .eggs/
 *.egg-info/
