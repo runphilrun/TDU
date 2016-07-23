@@ -1,5 +1,5 @@
-# ThrusterDesign
-Thruster nozzle design tool written in Python.
+# Thruster Design Tool
+Tool to aid in design of small monopropellant thrusters.
 
 > *[View this project on STEMN](http://stemn.com/projects/thruster-design-tool)*
 
