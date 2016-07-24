@@ -5,14 +5,11 @@
 [![License](https://img.shields.io/github/license/runphilrun/ThrusterDesign.svg?style=flat-square)](https://github.com/runphilrun/ThrusterDesign/blob/master/LICENSE.md)
 [![GitHub stars](https://img.shields.io/github/stars/runphilrun/ThrusterDesign.svg)](https://github.com/runphilrun/ThrusterDesign/stargazers)
 
-Tool to aid in design of small monopropellant thrusters.
-
-> *[View this project on STEMN](http://stemn.com/projects/thruster-design-tool)*
+> Tool to aid in design of small monopropellant thrusters. *[View this project on STEMN](http://stemn.com/projects/thruster-design-tool)*
 
 ```bash
-$ python setup.py build
-$ python setup.py install
-$ thruster-designer --help
+$ pip install thrusted
+$ thrusted --help
 ```
 
 ## Abstract
@@ -29,5 +26,7 @@ Please refer to the [Project Wiki](https://github.com/runphilrun/ThrusterDesign/
 > *If you encounter any bugs, please report them in the [Issue Tracker](https://github.com/runphilrun/ThrusterDesign/issues)!*
 
 ## Useful Resources
+- Propulsion: http://www.braeunig.us/space/propuls.htm
+- cli: https://docs.python.org/2/library/argparse.html
 - https://github.com/pytest-dev/pytest/
 - http://the-hitchhikers-guide-to-packaging.readthedocs.io/en/latest/quickstart.html
