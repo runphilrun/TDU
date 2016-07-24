@@ -1,6 +1,6 @@
 SETUP := python setup.py
 
-all: build test install
+all: clean build test install
 
 build:
 	$(SETUP) build
@@ -9,7 +9,7 @@ test:
 	$(SETUP) test
 
 install:
-	$(SETUP) install --record files.txt
+	$(SETUP) install
 
 uninstall:
 	pip uninstall thrusted
@@ -17,7 +17,6 @@ uninstall:
 clean:
 	rm -rf .\dist
 	rm -rf .\build
-
 
 help:
 	@echo 'Makefile build automation                                              '
@@ -35,4 +34,4 @@ help:
 	@echo '   make all                                                            '
 	@echo '                                                                       '
 
-.PHONY: all get-deps build test install clean help
+.PHONY: all build test install uninstall clean help
