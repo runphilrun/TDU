@@ -8,8 +8,6 @@ import configparser
 import math
 
 # set global constants
-global g0
-global R0
 g0 = 9.81  # [m/s^2] Standard gravity
 R0 = .008314  # [J/K*kmol] Universal gas constant
 
@@ -20,7 +18,7 @@ class Prop(object):
         self.k = k
         self.mMol = mMol
 
-    def gasconstant(self):
+    def R(self):
         return R0 / self.mMol
 
 
@@ -35,6 +33,9 @@ class Nozzle(object):
         return self._emode
 
     def set_emode(self):
+        """ Desired feature: add option here to run using e that is defined from
+            given Ae and At values
+        """
         print('Enter number to select mode.')
         option = input('[1] Update At from e | '
                        '[2] Update e from At | '
@@ -43,6 +44,7 @@ class Nozzle(object):
         if not (option == '1' or option == '2'):
             print('Operation cancelled! Mode not set.')
         self._emode = option
+
 
     @property
     def e(self):
@@ -136,11 +138,14 @@ def init():
         chbr
     )
     # print summary
+    print('Settings retrieved from config.ini\n------')
     print('Propellant:', prop.name)
     print('Chamber:', chbr.Tc, 'K,', chbr.Pc, 'bar')
     print('Nozzle:', noz.matl, '@', noz.thk, 'm thick')
+    print('------')
 
     # get inputs
+    thruster.noz.set_emode()
     thruster.mdot = float(input('Mass flow rate [kg/s]: '))  # mass flow rate [kg/s]
 
     return thruster
@@ -148,14 +153,7 @@ def init():
 
 def main():
     thruster = init()
-    noz = thruster.noz
-    noz.set_emode()
-    noz.e = 2 # set expansion ratio
-    noz.At = .02 # set throat area
-    noz.Ae = 10 # set exit area -> throat area changes to maintain e
-    noz.e = 500 # set new expansion ratio -> At and Ae do not update until they are called
-    noz.solve_e(500,250)
-    print('debug:', noz.At, noz.e, thruster.mdot, thruster.noz.Ae,noz.e == 2)
+
     return
 
 
