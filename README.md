@@ -2,8 +2,8 @@
 [![GitHub version](https://badge.fury.io/gh/runphilrun%2FThrusterDesign.svg)](https://badge.fury.io/gh/runphilrun%2FThrusterDesign)
 [![GitHub issues](https://img.shields.io/github/issues/runphilrun/ThrusterDesign.svg)](https://github.com/runphilrun/ThrusterDesign/issues)
 [![GitHub forks](https://img.shields.io/github/forks/runphilrun/ThrusterDesign.svg)](https://github.com/runphilrun/ThrusterDesign/network)
-[![License](https://img.shields.io/github/license/runphilrun/ThrusterDesign.svg?style=flat-square)](https://github.com/runphilrun/ThrusterDesign/blob/master/LICENSE.md)
 [![GitHub stars](https://img.shields.io/github/stars/runphilrun/ThrusterDesign.svg)](https://github.com/runphilrun/ThrusterDesign/stargazers)
+[![License](https://img.shields.io/github/license/runphilrun/ThrusterDesign.svg?style=flat-square)](https://github.com/runphilrun/ThrusterDesign/blob/master/LICENSE.md)
 
 Tool to aid in design of small monopropellant thrusters.
 
@@ -22,6 +22,9 @@ The thruster's nozzle, propellant, and chamber conditions each have a huge impac
 * Simulate the performance of a thruster in space for a given set of parameters and output performance metrics.
 * Output simulation data in a useful manner.
 * Allow the user to easily tweak parameters.
+
+## Usage
+Run `ThrusterDesign.py` and input parameters when prompted.
 
 ## About & Documentation
 Please refer to the [Project Wiki](https://github.com/runphilrun/ThrusterDesign/wiki) for details on the code structure, more information about the project, and general theory.
