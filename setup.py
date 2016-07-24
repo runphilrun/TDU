@@ -11,7 +11,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='thruster-designer',
+    name='thrusted',
     version='0.0.1',
     description='Thruster nozzle design tool written.',
     long_description=long_description,
@@ -33,13 +33,14 @@ setup(
 
     keywords='',
 
-    packages=[],
+    package_dir={'': 'src'},
+    packages=find_packages('src'),
     setup_requires=['pytest-runner', 'check-manifest'],
     tests_require=['pytest', 'coverage'],
 
     entry_points={
         'console_scripts': [
-            'thruster-designer=thruster_designer:main',
+            'thrusted=thrusted.cli:main',
         ],
     },
     test_suite='tests.test_suite'
