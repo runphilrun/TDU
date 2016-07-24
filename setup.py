@@ -36,12 +36,11 @@ setup(
     package_dir={'': 'src'},
     packages=find_packages('src'),
     setup_requires=['pytest-runner', 'check-manifest'],
-    tests_require=['pytest', 'coverage'],
+    tests_require=['pytest', 'check-manifest', 'coverage'],
 
     entry_points={
         'console_scripts': [
             'thrusted=thrusted.cli:main',
-        ],
-    },
-    test_suite='tests.test_suite'
+        ]
+    }
 )

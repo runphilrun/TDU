@@ -17,6 +17,7 @@ uninstall:
 clean:
 	rm -rf .\dist
 	rm -rf .\build
+	rm -rf .\.eggs
 
 help:
 	@echo 'Makefile build automation                                              '
@@ -24,7 +25,7 @@ help:
 	@echo 'Usage:                                                                 '
 	@echo '   make all                         dependencies, build, test, install '
 	@echo '   make build                       compiles source                    '
-	@echo '   make test                        runs unit tests                    '
+	@echo '   make test                        runs all the tests                 '
 	@echo '   make install                     install the built application      '
 	@echo '   make uninstall                   uninstall the built application    '
 	@echo '   make clean                       clean out all temporary files      '
