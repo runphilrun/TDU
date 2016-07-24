@@ -25,9 +25,9 @@ setup(
         'Development Status :: 1 - Planning',
         'Intended Audience :: Science/Research',
         'Topic :: Scientific/Engineering',
-        "Topic :: Utilities",
+        'Topic :: Utilities',
         'License :: OSI Approved :: Apache Software License',
-        "Operating System :: OS Independent",
+        'Operating System :: OS Independent',
         'Programming Language :: Python :: 3 :: Only'
     ],
 
