@@ -24,9 +24,3 @@ The thruster's nozzle, propellant, and chamber conditions each have a huge impac
 Please refer to the [Project Wiki](https://github.com/runphilrun/ThrusterDesign/wiki) for details on the code structure, more information about the project, and general theory.
 
 > *If you encounter any bugs, please report them in the [Issue Tracker](https://github.com/runphilrun/ThrusterDesign/issues)!*
-
-## Useful Resources
-- Propulsion: http://www.braeunig.us/space/propuls.htm
-- cli: https://docs.python.org/2/library/argparse.html
-- https://github.com/pytest-dev/pytest/
-- http://the-hitchhikers-guide-to-packaging.readthedocs.io/en/latest/quickstart.html
