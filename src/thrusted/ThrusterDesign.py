@@ -4,8 +4,9 @@ Philip Linden
 7/17/16
 """
 
-import configparser
-import math
+from configparser import *
+from math import *
+
 
 # set global constants
 g0 = 9.81  # [m/s^2] Standard gravity
@@ -17,33 +18,35 @@ class Prop(object):
         self.name = name
         self.k = k
         self.mMol = mMol
-
-    def R(self):
-        return R0 / self.mMol
-
+        self.R = float(R0 / self.mMol)
 
 class Nozzle(object):
     def __init__(self, matl, thk, rho):
         self.matl = matl
         self.thk = thk
         self.rho = rho
-        self._e = 1
+        self.e = 1.0
 
     def emode(self):
         return self._emode
 
-    def set_emode(self):
+    def set_emode(self,debug=False):
         """ Desired feature: add option here to run using e that is defined from
             given Ae and At values
         """
-        print('Enter number to select mode.')
-        option = input('[1] Update At from e | '
-                       '[2] Update e from At | '
-                       '[3] Cancel'
-                       '\nSelection: ')
-        if not (option == '1' or option == '2'):
-            print('Operation cancelled! Mode not set.')
-        self._emode = option
+        default = '2'
+        if debug == True:
+            self._emode = default
+        else:
+            print('Enter number to select mode.')
+            option = input('[1] Fixed expansion ratio, At and Ae update each other | '
+                           '[2] Fixed At, Ae and expansion ratio update each other | '
+                           '[3] Cancel & use default'
+                           '\nSelection: ')
+            if not (option == '1' or option == '2'):
+                print('Operation cancelled! Mode set to default =',default)
+                option = default
+            self._emode = option
 
 
     @property
@@ -67,15 +70,19 @@ class Nozzle(object):
 
     @At.setter
     def At(self, At):
-        self._At = At
-        self._Ae = self._At * self._e
+        if self._emode == '1':
+            self._At = At
+            self.Ae = self._At * self.e
+        elif self._emode == '2':
+            self._At = At
+            self._e = self.Ae / self.Ae
 
     @property
     def Ae(self):
-        if not (self._Ae > 0):
+        if self._Ae <= 0.0:
             raise Exception("Exit area not set. Set Ae or define At & e.")
         else:
-            self._Ae = self._At * self._e
+            self._Ae = self.At * self.e
             return self._Ae
 
     @Ae.setter
@@ -88,11 +95,11 @@ class Nozzle(object):
             self._Ae = Ae
             self._e = self._Ae / self._At
 
-    def h(self):
-        Re = math.sqrt(self.Ae / math.pi)
-        Rt = math.sqrt(self.At / math.pi)
-        alpha = math.radians(15)
-        return Re / math.tan(alpha) - Rt / math.tan(alpha)
+    def L(self):
+        Re = sqrt(self._Ae / pi)
+        Rt = sqrt(self._At / pi)
+        alpha = radians(15)
+        return Re / tan(alpha) - Rt / tan(alpha)
 
 
 class Chamber(object):
@@ -116,7 +123,7 @@ class Thruster(object):
         self._mdot = mdot
 
 def init():
-    config = configparser.ConfigParser()
+    config = ConfigParser()
     config.read('config.ini')
     prop = Prop(
         config.get('Prop', 'name'),
@@ -139,13 +146,13 @@ def init():
     )
     # print summary
     print('Settings retrieved from config.ini\n------')
-    print('Propellant:', prop.name)
+    print('Propellant:', prop.name,'','k =',prop.k,'','mMol =',prop.mMol)
     print('Chamber:', chbr.Tc, 'K,', chbr.Pc, 'bar')
     print('Nozzle:', noz.matl, '@', noz.thk, 'm thick')
     print('------')
 
     # get inputs
-    thruster.noz.set_emode()
+    thruster.noz.set_emode(True) #True for debug ON
     thruster.mdot = float(input('Mass flow rate [kg/s]: '))  # mass flow rate [kg/s]
 
     return thruster
@@ -153,7 +160,15 @@ def init():
 
 def main():
     thruster = init()
-
+    mdot = thruster.mdot
+    k = thruster.prop.k
+    R = thruster.prop.R
+    Tc = thruster.chbr.Tc
+    Pc = thruster.chbr.Pc
+    print('-----','\nmdot',mdot,'\nk',k,'\nR',R,'\nTc',Tc,'\nPc',Pc)
+    # find optimal throat area based on mdot
+    thruster.noz.At = (mdot * sqrt(k*R*Tc))/(Pc * k * sqrt((2/(k+1))**((k+1)/(k-1))))
+    print('At =',thruster.noz.At)
     return
 
 
