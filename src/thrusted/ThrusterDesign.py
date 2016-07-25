@@ -157,7 +157,7 @@ def main():
     R = thruster.prop.R
     Tc = thruster.chbr.Tc
     Pc = thruster.chbr.Pc
-    print('-----','\nmdot',mdot,'[kg]\ne',e,'\nk',k,'\nR',R,'[kJ/kg]\nTc',Tc,'[K]\nPc',Pc,'[Pa]')
+    print('-----','\nmdot',mdot,'[kg]\ne',e,'\nk',k,'\nR',R,'[kJ/kg]\nTc',Tc,'[K]\nPc',Pc,'[bar]')
     # find optimal throat area based on mdot
     thruster.noz.At = (mdot * sqrt(k*R*Tc))/(Pc * k * sqrt((2/(k+1))**((k+1)/(k-1))))
     print('At =',thruster.noz.At,'[m^2]\nAe =',thruster.noz.Ae,'[m^2]\nL =',thruster.noz.L(),'[m]')
