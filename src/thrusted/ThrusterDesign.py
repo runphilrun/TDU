@@ -18,36 +18,35 @@ class Prop(object):
         self.name = name
         self.k = k
         self.mMol = mMol
-        self.R = float(R0 / self.mMol)
+        self.R = R0 / self.mMol
 
 class Nozzle(object):
     def __init__(self, matl, thk, rho):
         self.matl = matl
         self.thk = thk
         self.rho = rho
-        self.e = 1.0
+        self._e = 1.0
 
     def emode(self):
         return self._emode
 
-    def set_emode(self,debug=False):
-        """ Desired feature: add option here to run using e that is defined from
-            given Ae and At values
-        """
-        default = '2'
-        if debug == True:
-            self._emode = default
-        else:
-            print('Enter number to select mode.')
-            option = input('[1] Fixed expansion ratio, At and Ae update each other | '
-                           '[2] Fixed At, Ae and expansion ratio update each other | '
-                           '[3] Cancel & use default'
-                           '\nSelection: ')
-            if not (option == '1' or option == '2'):
-                print('Operation cancelled! Mode set to default =',default)
-                option = default
-            self._emode = option
-
+    """
+    BUGGY, AREAS ARE DOUBLE DIPPING IN CHECKS/UPDATES.
+        def set_emode(self,debug=False):
+            default = '1'
+            if debug:
+                self._emode = default
+            else:
+                print('Enter number to select mode.')
+                option = input('[1] Fixed expansion ratio, At and Ae update each other | '
+                               '[2] Fixed At, Ae and expansion ratio update each other | '
+                               '[3] Cancel & use default'
+                               '\nSelection: ')
+                if not (option == '1' or option == '2'):
+                    print('Operation cancelled! Mode set to default =',default)
+                    option = default
+                self._emode = option
+    """
 
     @property
     def e(self):
@@ -64,36 +63,28 @@ class Nozzle(object):
 
     @property
     def At(self):
-        if not (self._At > 0):
-            raise Exception("Throat area not set. Set At or define Ae & e.")
         return self._At
 
     @At.setter
     def At(self, At):
-        if self._emode == '1':
-            self._At = At
-            self.Ae = self._At * self.e
-        elif self._emode == '2':
-            self._At = At
+        self._At = At
+        """
+        if self._emode == '2':
             self._e = self.Ae / self.Ae
+        """
 
     @property
     def Ae(self):
-        if self._Ae <= 0.0:
-            raise Exception("Exit area not set. Set Ae or define At & e.")
-        else:
-            self._Ae = self.At * self.e
-            return self._Ae
+        self._Ae = self.At * self.e
+        return self._Ae
 
     @Ae.setter
     def Ae(self, Ae):
-
-        if self._emode == '1':
-            self._Ae = Ae
-            self._At = self._Ae / self._e
-        elif self._emode == '2':
-            self._Ae = Ae
+        self._Ae = Ae
+        """
+        if self._emode == '2':
             self._e = self._Ae / self._At
+        """
 
     def L(self):
         Re = sqrt(self._Ae / pi)
@@ -152,23 +143,26 @@ def init():
     print('------')
 
     # get inputs
-    thruster.noz.set_emode(True) #True for debug ON
+    #thruster.noz.set_emode(True) #True for debug ON
     thruster.mdot = float(input('Mass flow rate [kg/s]: '))  # mass flow rate [kg/s]
-
+    thruster.noz.e = float(input('Expansion ratio (>1): '))
     return thruster
 
 
 def main():
     thruster = init()
     mdot = thruster.mdot
+    e = thruster.noz.e
     k = thruster.prop.k
     R = thruster.prop.R
     Tc = thruster.chbr.Tc
     Pc = thruster.chbr.Pc
-    print('-----','\nmdot',mdot,'\nk',k,'\nR',R,'\nTc',Tc,'\nPc',Pc)
+    print('-----','\nmdot',mdot,'[kg]\ne',e,'\nk',k,'\nR',R,'[kJ/kg]\nTc',Tc,'[K]\nPc',Pc,'[Pa]')
     # find optimal throat area based on mdot
     thruster.noz.At = (mdot * sqrt(k*R*Tc))/(Pc * k * sqrt((2/(k+1))**((k+1)/(k-1))))
-    print('At =',thruster.noz.At)
+    print('At =',thruster.noz.At,'[m^2]\nAe =',thruster.noz.Ae,'[m^2]\nL =',thruster.noz.L(),'[m]')
+
+
     return
 
 
