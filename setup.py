@@ -34,9 +34,6 @@ setup(
 
     package_dir = {'': 'src'},
     packages = find_packages('src'),
-    setup_requires = ['check-manifest', 'sphinx', 'sphinx_rtd_theme'],
-    tests_require = ['sphinx', 'check-manifest', 'coverage'],
-
     entry_points = {
         'console_scripts': [
             'thrusted = thrusted.cli:main'

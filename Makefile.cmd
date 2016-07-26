@@ -9,6 +9,7 @@ if errorlevel 1 (
 
 choco install python3 --confirm
 choco install make    --confirm
-
 refreshenv
+
+pip install -r requirements.txt
 make
