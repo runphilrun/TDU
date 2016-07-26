@@ -1,26 +1,28 @@
-SETUP := python setup.py
+setup.py := python setup.py
 
 all: clean build test docs install
 
 build:
-	$(SETUP) build
+	$(setup.py) build
 
 test:
-	$(SETUP) test
+	sphinx-build -E -q -n -b doctest ./docs ./build/docs -d ./.doctrees
 
 docs:
-	$(SETUP) docs
+	sphinx-build -E -q -n -b html ./docs ./build/docs -d ./.doctrees
 
 install:
-	$(SETUP) install
+	$(setup.py) install
 
 uninstall:
 	pip uninstall thrusted
 
 clean:
-	rm -rf .\dist
-	rm -rf .\build
-	rm -rf .\.eggs
+	rm -rf ./dist
+	rm -rf ./build
+	rm -rf ./.eggs
+	rm -rf ./src/thrusted.egg-info
+	rm -rf ./.doctrees
 
 help:
 	@echo 'Makefile build automation                                              '
@@ -39,4 +41,4 @@ help:
 	@echo '   make all                                                            '
 	@echo '                                                                       '
 
-.PHONY: all build test docs install uninstall clean help
+.PHONY: all build test docs install uninstall   help
