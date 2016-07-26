@@ -1,4 +1,5 @@
 setup.py := python setup.py
+sphinx-build := sphinx-build ./docs ./build/docs -E -d ./.doctrees -q -n -b
 
 all: clean build test docs install
 
@@ -6,10 +7,10 @@ build:
 	$(setup.py) build
 
 test:
-	sphinx-build -E -q -n -b doctest ./docs ./build/docs -d ./.doctrees
+	$(sphinx-build) doctest 
 
 docs:
-	sphinx-build -E -q -n -b html ./docs ./build/docs -d ./.doctrees
+	$(sphinx-build) html
 
 install:
 	$(setup.py) install
@@ -28,7 +29,7 @@ help:
 	@echo 'Makefile build automation                                              '
 	@echo '                                                                       '
 	@echo 'Usage:                                                                 '
-	@echo '   make all                         clean, build, test, install        '
+	@echo '   make all                         clean, build, test, docs, install  '
 	@echo '   make build                       compiles source                    '
 	@echo '   make test                        runs all the tests                 '
 	@echo '   make install                     install the built application      '
@@ -41,4 +42,4 @@ help:
 	@echo '   make all                                                            '
 	@echo '                                                                       '
 
-.PHONY: all build test docs install uninstall   help
+.PHONY: all build test docs install uninstall help
