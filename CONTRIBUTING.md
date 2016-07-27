@@ -47,3 +47,4 @@ __Example:__
 * [Python CLI](https://docs.python.org/2/library/argparse.html)
 * [Python testing](https://github.com/pytest-dev/pytest/)
 * [Python packaging](http://the-hitchhikers-guide-to-packaging.readthedocs.io/en/latest/quickstart.html)
+* [Python dependency management](https://packaging.python.org/requirements/)

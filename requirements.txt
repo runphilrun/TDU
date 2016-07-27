@@ -1,0 +1,3 @@
+check-manifest
+Sphinx
+sphinx-rtd-theme

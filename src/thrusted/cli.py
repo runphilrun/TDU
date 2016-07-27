@@ -2,6 +2,13 @@ import sys
 import argparse
 
 def main():
+    """
+    ``thrustr --help``
+    TODO: Show help screen.
+
+    >>> 1 + 1
+    2
+    """
     parser = argparse.ArgumentParser(description='Process some stuff.')
     parser.add_argument('integers', help='an integer for the accumulator',
         type=int,
