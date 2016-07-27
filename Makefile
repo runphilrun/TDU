@@ -10,7 +10,11 @@ test:
 	$(sphinx-build) doctest 
 
 docs:
-	$(sphinx-build) html
+	# todo: we shouldn't have to build with travis-sphinx
+	travis-sphinx --source=./docs --outdir=./build/docs build
+
+deploy-docs:
+	travis-sphinx deploy
 
 install:
 	$(setup.py) install

@@ -1,3 +1,4 @@
 check-manifest
 Sphinx
 sphinx-rtd-theme
+travis-sphinx
