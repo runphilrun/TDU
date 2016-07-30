@@ -6,7 +6,7 @@ import sphinx_rtd_theme
 # Add our modules to the system path.
 sys.path.insert(0, os.path.abspath("../src"))
 
-project = 'thrustr'
+project = 'tdu'
 copyright = '2016, Phil-Linden, Nate-Wilkins'
 author = 'Phil-Linden, Nate-Wilkins'
 
@@ -46,7 +46,7 @@ html_show_sourcelink = True
 html_show_sphinx = True
 html_show_copyright = True
 html_search_language = 'en'
-htmlhelp_basename = 'thrustrdoc'
+htmlhelp_basename = 'tdudoc'
 
 # -- Options for LaTeX output ---------------------------------------------
 latex_elements = {
@@ -71,6 +71,6 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'thrustr.tex', 'thrustr Documentation',
+    (master_doc, 'tdu.tex', 'tdu Documentation',
      'Phil-Linden,Nate-Wilkins', 'manual'),
 ]
