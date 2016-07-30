@@ -1,4 +1,4 @@
 check-manifest
 Sphinx
 sphinx-rtd-theme
-git+git://github.com/Nate-Wilkins/travis-sphinx
+git+git://github.com/Nate-Wilkins/travis-sphinx@patch-1
