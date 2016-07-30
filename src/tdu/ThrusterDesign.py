@@ -1,5 +1,5 @@
 """
-Thruster Design Tool v1.0.0
+Thruster Design Utility v1.0.0
 Philip Linden
 7/17/16
 """

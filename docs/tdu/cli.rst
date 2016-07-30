@@ -1,5 +1,5 @@
 Command Line Interface
 ======================
 
-.. automodule:: thrusted.cli
+.. automodule:: tdu.cli
    :members:

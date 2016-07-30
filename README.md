@@ -1,5 +1,4 @@
-# Thruster Design Tool
-
+# Thruster Design Utility
 [![Documentation Status](https://readthedocs.org/projects/thrusterdesign/badge/?version=latest)](http://thrusterdesign.readthedocs.io/en/latest/?badge=latest)
 [![Build status](https://img.shields.io/travis/runphilrun/ThrusterDesign.svg?style=flat-square)](https://travis-ci.org/runphilrun/ThrusterDesign)
 [![GitHub issues](https://img.shields.io/github/issues/runphilrun/ThrusterDesign.svg?style=flat-square)](https://github.com/runphilrun/ThrusterDesign/issues)
@@ -21,8 +20,8 @@ The thruster's nozzle, propellant, and chamber conditions each have a huge impac
 
 ## Usage
 ```bash
-$ pip install thrusted
-$ thrusted --help
+$ pip install tdu
+$ tdu --help
 ```
 Run `ThrusterDesign.py` and input parameters when prompted.
 

@@ -10,11 +10,11 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name = 'thrusted',
+    name = 'tdu',
     version = '0.0.1',
-    description = 'Thruster nozzle design tool written.',
+    description = 'Thruster design utility.',
     long_description = long_description,
-    url = 'https://github.com/runphilrun/ThrusterDesign',
+    url = 'https://github.com/runphilrun/ThrusterDesignUtility',
     author = 'Phil-Linden',
     author_email = 'pjl7651@rit.edu',
     license = 'Apache-2.0',
@@ -36,7 +36,7 @@ setup(
     packages = find_packages('src'),
     entry_points = {
         'console_scripts': [
-            'thrusted = thrusted.cli:main'
+            'tdu = tdu.cli:main'
         ]
     }
 )
