@@ -1,4 +1,4 @@
-Welcome to thrustr's documentation!
+Welcome to tdu documentation!
 ===================================
 
 .. toctree::
