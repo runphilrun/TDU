@@ -14,12 +14,10 @@ setup(
     version = '0.0.1',
     description = 'Thruster design utility.',
     long_description = long_description,
-    url = 'https://github.com/runphilrun/ThrusterDesignUtility',
+    url = 'https://github.com/runphilrun/tdu',
     author = 'Phil-Linden',
     author_email = 'pjl7651@rit.edu',
     license = 'Apache-2.0',
-
-    # https://pypi.python.org/pypi?%3Aaction = list_classifiers
     classifiers = [
         'Development Status :: 1 - Planning',
         'Intended Audience :: Science/Research',
@@ -29,9 +27,7 @@ setup(
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 3 :: Only'
     ],
-
     keywords = '',
-
     package_dir = {'': 'src'},
     packages = find_packages('src'),
     entry_points = {
