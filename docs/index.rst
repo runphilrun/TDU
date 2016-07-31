@@ -1,9 +1,4 @@
-.. thrustr documentation master file, created by
-   sphinx-quickstart on Mon Jul 25 20:58:36 2016.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
-Welcome to thrustr's documentation!
+Welcome to tdu documentation!
 ===================================
 
 .. toctree::
@@ -14,6 +9,8 @@ Welcome to thrustr's documentation!
 
    **/*
 
+There's not much here yet but we're working on it!
+   
 Indices and tables
 ==================
 

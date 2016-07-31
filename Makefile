@@ -1,5 +1,6 @@
 setup.py := python setup.py
 sphinx-build := sphinx-build ./docs ./build/docs -E -d ./.doctrees -q -n -b
+sphinx-deploy := travis-sphinx --source=./docs --outdir=./build/docs
 
 all: clean build test docs install
 
@@ -7,10 +8,13 @@ build:
 	$(setup.py) build
 
 test:
-	$(sphinx-build) doctest 
+	$(sphinx-build) doctest
 
 docs:
 	$(sphinx-build) html
+
+docs-deploy:
+	$(sphinx-deploy) deploy
 
 install:
 	$(setup.py) install
@@ -36,6 +40,7 @@ help:
 	@echo '   make uninstall                   uninstall the built application    '
 	@echo '   make clean                       clean out all temporary files      '
 	@echo '   make docs                        generate application documentation '
+	@echo '   make docs-deploy                 deploy built docs to gh-pages      '
 	@echo '   make help                        displays this help text            '
 	@echo '                                                                       '
 	@echo 'DEFAULT:                                                               '
