@@ -9,6 +9,8 @@ Welcome to tdu documentation!
 
    **/*
 
+There's not much here yet but we're working on it!
+   
 Indices and tables
 ==================
 
