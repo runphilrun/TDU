@@ -6,12 +6,12 @@ Philip Linden
 
 from configparser import *
 from math import *
-
+import numpy as np
+import matplotlib.pyplot as plt
 
 # set global constants
 g0 = 9.81  # [m/s^2] Standard gravity
 R0 = .008314  # [J/K*kmol] Universal gas constant
-
 
 class Prop(object):
     def __init__(self, name, k, mMol):
@@ -26,27 +26,6 @@ class Nozzle(object):
         self.thk = thk
         self.rho = rho
         self._e = 1.0
-
-    def emode(self):
-        return self._emode
-
-    """
-    BUGGY, AREAS ARE DOUBLE DIPPING IN CHECKS/UPDATES.
-        def set_emode(self,debug=False):
-            default = '1'
-            if debug:
-                self._emode = default
-            else:
-                print('Enter number to select mode.')
-                option = input('[1] Fixed expansion ratio, At and Ae update each other | '
-                               '[2] Fixed At, Ae and expansion ratio update each other | '
-                               '[3] Cancel & use default'
-                               '\nSelection: ')
-                if not (option == '1' or option == '2'):
-                    print('Operation cancelled! Mode set to default =',default)
-                    option = default
-                self._emode = option
-    """
 
     @property
     def e(self):
@@ -68,7 +47,7 @@ class Nozzle(object):
     @At.setter
     def At(self, At):
         self._At = At
-        self._Rt = (At/(2*pi))**.5
+        self._Rt = (At/(pi))**.5
 
     @property
     def Ae(self):
@@ -77,7 +56,7 @@ class Nozzle(object):
     @Ae.setter
     def Ae(self, Ae):
         self._Ae = Ae
-        self._Re = (Ae/(2*pi))**.5
+        self._Re = (Ae/(pi))**.5
 
     @property
     def Re(self):
@@ -85,7 +64,7 @@ class Nozzle(object):
     @Re.setter
     def Re(self,Re):
         self._Re = Re
-        self._Ae = 2*pi*Re**2
+        self._Ae = pi*(Re**2)
 
     @property
     def Rt(self):
@@ -93,7 +72,7 @@ class Nozzle(object):
     @Rt.setter
     def Rt(self,Rt):
         self._Rt = Rt
-        self._At = 2*pi*Rt**2
+        self._At = pi*(Rt**2)
 
     def L(self):
         self._Re = sqrt(self._Ae / pi)
@@ -112,7 +91,6 @@ class Thruster(object):
         self.prop = prop
         self.noz = noz
         self.chbr = chbr
-        self.mdot = 0
 
     @property
     def mdot(self):
@@ -121,7 +99,24 @@ class Thruster(object):
     def mdot(self, mdot):
         self._mdot = mdot
 
+    @property
+    def Tt(self):
+        return self._Tt
+    @Tt.setter
+    def Tt(self, Tt):
+        self._Tt = Tt
+
+    @property
+    def Pt(self):
+        return self._Pt
+    @Pt.setter
+    def Pt(self, Pt):
+        self._Pt = Pt
+
 def init():
+    """
+    :return thruster:
+    """
     config = ConfigParser()
     config.read('config.ini')
     prop = Prop(
@@ -149,43 +144,105 @@ def init():
     print('Chamber:', chbr.Tc, 'K,', chbr.Pc, 'bar')
     print('Nozzle:', noz.matl, '@', noz.thk, 'm thick')
     print('------')
-
-    # get inputs
-    #thruster.noz.set_emode(True) #True for debug ON
-    thruster.mdot = float(input('Mass flow rate [kg/s]: '))  # mass flow rate [kg/s]
-    thruster.noz.Re = (float(input('Nozzle exit radius [mm]: '))*.001)
     return thruster
 
+def display(thruster):
+    """
+    :param thruster:
+    :return:
+    all thruster properties must be set.
+    """
+    print('-----',
+          '\nChamber conditions:'
+          '\nk',thruster.prop.k,
+          '\nR',thruster.prop.R,'[kJ/kg]',
+          '\nTc',thruster.chbr.Tc,'[K]',
+          '\nPc',thruster.chbr.Pc,'[bar]')
+    print('\nThroat conditions:'
+          '\nTt',thruster.Tt,'[K]',
+          '\nPt',thruster.Pt,'[bar]',
+         '\nAt =',thruster.noz.At,'[m^2]',
+          '\nRt =',thruster.noz.Rt*1000,'[mm]')
+    print('\nExit conditions:',
+          '\ne',thruster.noz.e,
+          '\nAe =',thruster.noz.Ae,'[m^2]',
+          '\nRe =',thruster.noz.Re*1000,'[mm]',
+          '\nL =',thruster.noz.L(),'[m]',
+          '\n-----')
+
+def solveMach(nozzle, k):
+    """
+    :param nozzle:
+    :param k:
+    :return M:
+    solve Mach number from area ratio by iteration. assume supersonic
+    https://www.grc.nasa.gov/WWW/winddocs/utilities/b4wind_guide/mach.html
+    """
+    A = nozzle.Ae
+    At = nozzle.At
+    P = 2/(k+1)
+    Q = 1-P
+    E = (k+1)/(k-1)
+    R = (A/At)**((2*Q)/P)
+    a = Q**(1/P)
+    r = (R-1)/(2*a)
+    X = 1/((1+r)+sqrt(r*(r+2))) #initial guess
+    diff = 1 #initalize iteration difference
+    while abs(diff) > .01:
+        F = (P*X+Q)**(1/P)-R*X
+        dF = (P*X+Q)**((1/P)-1)-R
+        Xnew = X- F/dF
+        diff = Xnew - X
+        X = Xnew
+    M = 1/sqrt(X)
+    return M
 
 def main():
     thruster = init()
-    mdot = thruster.mdot
     k = thruster.prop.k
     R = thruster.prop.R
     Tc = thruster.chbr.Tc
     Pc = thruster.chbr.Pc
 
-    # find optimal throat area based on mdot
-    thruster.noz.At = (mdot * sqrt(k*R*Tc))/(Pc * k * sqrt((2/(k+1))**((k+1)/(k-1))))
-    e = thruster.noz.solve_e(thruster.noz.Ae,thruster.noz.At)
+    # get inputs
+    print('Set some initial conditions:')
+    thruster.noz.Re = float(input('Nozzle exit radius [mm]: '))/1000
+    Ae = thruster.noz.Ae #resolve Ae from Re
+    L = float(input('Nozzle length [mm]: '))/1000
+#    thruster.noz.e = (float(input('Expansion ratio (Ae/At): ')))
 
-    #display results
-    print('-----',
-          '\nmdot',mdot,'[kg]',
-          '\ne',e,
-          '\nk',k,
-          '\nR',R,'[kJ/kg]',
-          '\nTc',Tc,'[K]',
-          '\nPc',Pc,'[bar]')
-    print('\nAt =',thruster.noz.At,'[m^2]',
-          '\nAe =',thruster.noz.Ae,'[m^2]',
-          '\nRt =',thruster.noz.Rt*1000,'[mm]',
-          '\nRe =',thruster.noz.Re*1000,'[mm]',
-          '\nL =',thruster.noz.L(),'[m]')
+    # throat conditions
+    At = pi*(sqrt(thruster.noz.Ae/pi)-2*L*sin(radians(15)))**2
+    thruster.noz.At = At
+    critP = (2/(k+1))**(k/(k-1))
+    thruster.Pt = Pc*critP
+    Pt = thruster.Pt
+    thruster.Tt = Tc*(2/(k+1))
+    Tt = thruster.Tt
+    mdot = (Pt/(R*Tt))*sqrt(k*R*Tt)*At
 
+    #exit conditions
+    M = solveMach(thruster.noz,k)
+    ve = sqrt(((2*k*R*Tc)/(k-1))*(1-(1/(1+((k-1)/2)*M**2))))
+    Pe = Pc/((1+((k-1)/2)*M**2)**(k/(k-1)))
 
+    #characteristic values
+    vc = Pt*At/mdot
+    CF = (ve/vc)+(Ae/At)*(Pe/Pc)
+
+    #performance
+    F = At*Pc*CF
+    Isp = F/(g0*mdot)
+
+    print('\nDEBUG:',
+          '\n At =', At*1000, '[mm]',
+          '\n M  =', M,
+          '\n ve =', ve, '[m/s]',
+          '\n F  =', F, '[N]',
+          '\n Isp=', Isp, '[s]'
+          )
+#    display(thruster)
     return
-
 
 if __name__ == "__main__":
     main()
