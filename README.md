@@ -1,11 +1,11 @@
 # Thruster Design Utility
 [![Documentation Status](https://readthedocs.org/projects/thrusterdesign/badge/?version=latest)](http://thrusterdesign.readthedocs.io/en/latest/?badge=latest)
-[![Build status](https://img.shields.io/travis/runphilrun/ThrusterDesign.svg?style=flat-square)](https://travis-ci.org/runphilrun/ThrusterDesign)
-[![GitHub issues](https://img.shields.io/github/issues/runphilrun/ThrusterDesign.svg?style=flat-square)](https://github.com/runphilrun/ThrusterDesign/issues)
+[![Build status](https://img.shields.io/travis/runphilrun/ThrusterDesign.svg?style=flat-square)](https://travis-ci.org/runphilrun/TDU)
+[![GitHub issues](https://img.shields.io/github/issues/runphilrun/TDU.svg)](https://github.com/runphilrun/TDU/issues)
 [![PyPI](https://img.shields.io/pypi/v/thrusted.svg?style=flat-square)](https://pypi.python.org/pypi/thrusted)
-[![GitHub stars](https://img.shields.io/github/stars/runphilrun/ThrusterDesign.svg?style=flat-square)](https://github.com/runphilrun/ThrusterDesign/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/runphilrun/ThrusterDesign.svg?style=flat-square)](https://github.com/runphilrun/ThrusterDesign/network)
-[![License](https://img.shields.io/github/license/runphilrun/ThrusterDesign.svg?style=flat-square)](https://github.com/runphilrun/ThrusterDesign/blob/master/LICENSE.md)
+[![GitHub stars](https://img.shields.io/github/stars/runphilrun/TDU.svg)](https://github.com/runphilrun/TDU/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/runphilrun/TDU.svg)](https://github.com/runphilrun/TDU/network)
+[![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/runphilrun/TDU/master/LICENSE.md)
 
 
 > Tool to aid in design of small monopropellant thrusters. *[View this project on STEMN](http://stemn.com/projects/thruster-design-tool)*
