@@ -1,6 +1,6 @@
 # Thruster Design Utility
 [![Documentation Status](https://readthedocs.org/projects/thrusterdesign/badge/?version=latest)](http://thrusterdesign.readthedocs.io/en/latest/?badge=latest)
-[![Build status](https://img.shields.io/travis/runphilrun/ThrusterDesign.svg?style=flat-square)](https://travis-ci.org/runphilrun/TDU)
+[![Build status](https://travis-ci.org/runphilrun/TDU.svg?style=flat-square)](https://travis-ci.org/runphilrun/TDU)
 [![GitHub issues](https://img.shields.io/github/issues/runphilrun/TDU.svg)](https://github.com/runphilrun/TDU/issues)
 [![PyPI](https://img.shields.io/pypi/v/thrusted.svg?style=flat-square)](https://pypi.python.org/pypi/thrusted)
 [![GitHub stars](https://img.shields.io/github/stars/runphilrun/TDU.svg)](https://github.com/runphilrun/TDU/stargazers)
