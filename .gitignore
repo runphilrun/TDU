@@ -1,3 +1,4 @@
+.pypirc
 .tox/
 build/
 dist/
