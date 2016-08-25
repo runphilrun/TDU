@@ -2,7 +2,7 @@
 [![Documentation Status](https://readthedocs.org/projects/thrusterdesign/badge/?version=latest)](http://thrusterdesign.readthedocs.io/en/latest/?badge=latest)
 [![Build status](https://travis-ci.org/runphilrun/TDU.svg?style=flat-square)](https://travis-ci.org/runphilrun/TDU)
 [![GitHub issues](https://img.shields.io/github/issues/runphilrun/TDU.svg)](https://github.com/runphilrun/TDU/issues)
-[![PyPI](https://img.shields.io/pypi/v/thrusted.svg?style=flat-square)](https://pypi.python.org/pypi/thrusted)
+[![PyPI](https://img.shields.io/pypi/v/tdu.svg?style=flat-square)](https://pypi.python.org/pypi/tdu)
 [![GitHub stars](https://img.shields.io/github/stars/runphilrun/TDU.svg)](https://github.com/runphilrun/TDU/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/runphilrun/TDU.svg)](https://github.com/runphilrun/TDU/network)
 [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/runphilrun/TDU/master/LICENSE.md)
