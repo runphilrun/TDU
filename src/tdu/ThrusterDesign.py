@@ -4,7 +4,6 @@ Philip Linden
 7/17/16
 """
 
-
 from math import sqrt, pi, radians, tan, sin
 from configparser import ConfigParser
 
@@ -12,21 +11,18 @@ from configparser import ConfigParser
 g0 = 9.81  # [m/s^2] Standard gravity
 R0 = .008314  # [J/K*kmol] Universal gas constant
 
-
-class Prop(object):
-    def __init__(self, name, k, mMol):
+class Thruster(object):
+    def __init__(self, name, k, mMol, matl, thk, rho, Tc, Pc):
         self.name = name
         self.k = k
         self.mMol = mMol
         self.R = R0 / self.mMol
-
-
-class Nozzle(object):
-    def __init__(self, matl, thk, rho):
         self.matl = matl
         self.thk = thk
         self.rho = rho
         self._e = 1.0
+        self.Tc = Tc
+        self.Pc = Pc
 
     @property
     def e(self):
@@ -77,24 +73,13 @@ class Nozzle(object):
         self._Rt = Rt
         self._At = pi*(Rt**2)
 
+    @property
     def L(self):
-        self._Re = sqrt(self._Ae / pi)
-        self._Rt = sqrt(self._At / pi)
-        alpha = radians(15)
-        return (self._Re - self._Rt) / tan(alpha)
+        return self._L
 
-
-class Chamber(object):
-    def __init__(self, Tc, Pc):
-        self.Tc = Tc
-        self.Pc = Pc
-
-
-class Thruster(object):
-    def __init__(self, prop, noz, chbr):
-        self.prop = prop
-        self.noz = noz
-        self.chbr = chbr
+    @L.setter
+    def L(self, L):
+        self._L = L
 
     @property
     def mdot(self):
@@ -120,71 +105,104 @@ class Thruster(object):
     def Pt(self, Pt):
         self._Pt = Pt
 
+    @property
+    def M(self):
+        return self._M
+
+    @M.setter
+    def M(self, M):
+        self._M = M
+
+    @property
+    def ve(self):
+        return self._ve
+
+    @ve.setter
+    def ve(self, ve):
+        self._ve = ve
+
+    @property
+    def F(self):
+        return self._F
+
+    @F.setter
+    def F(self, F):
+        self._F = F
+
+    @property
+    def Isp(self):
+        return self._Isp
+
+    @Isp.setter
+    def Isp(self, Isp):
+        self._Isp = Isp
+
+    @property
+    def vc(self):
+        return self._vc
+
+    @vc.setter
+    def vc(self, vc):
+        self._vc =vc
+
+    @property
+    def CF(self):
+        return self._CF
+
+    @CF.setter
+    def CF(self, CF):
+        self._CF = CF
 
 def init():
-    """
-    :return thruster:
-    """
     config = ConfigParser()
     config.read('config.ini')
-    prop = Prop(
+    thruster = Thruster(
         config.get('Prop', 'name'),
         config.getfloat('Prop', 'k'),
         config.getfloat('Prop', 'mMol'),
-    )
-    noz = Nozzle(
         config.get('Nozzle', 'matl'),
         config.getfloat('Nozzle', 'thk'),
-        config.getfloat('Nozzle', 'rho')
-    )
-    chbr = Chamber(
+        config.getfloat('Nozzle', 'rho'),
         config.getfloat('Chamber', 'Tc'),
-        config.getfloat('Chamber', 'Pc'),
-    )
-    thruster = Thruster(
-        prop,
-        noz,
-        chbr
+        config.getfloat('Chamber', 'Pc')
     )
     # print summary
     print('Settings retrieved from config.ini\n------')
-    print('Propellant:', prop.name, '', 'k =', prop.k, '', 'mMol =', prop.mMol)
-    print('Chamber:', chbr.Tc, 'K,', chbr.Pc, 'bar')
-    print('Nozzle:', noz.matl, '@', noz.thk, 'm thick')
+    print('Propellant:', thruster.name, '', 'k =', thruster.k, '', 'mMol =', thruster.mMol)
+    print('Chamber:', thruster.Tc, 'K,', thruster.Pc, 'bar')
+    print('Nozzle:', thruster.matl, '@', thruster.thk, 'm thick')
     print('------')
     return thruster
 
-
 def display(thruster):
-    """
-    :param thruster:
-    :return:
-    all thruster properties must be set.
-    """
     print('-----',
           '\nChamber conditions:'
-          '\nk', thruster.prop.k,
-          '\nR', thruster.prop.R, '[kJ/kg]',
-          '\nTc', thruster.chbr.Tc, '[K]',
-          '\nPc', thruster.chbr.Pc, '[bar]')
+          '\nk  =', thruster.k,
+          '\nR  =', thruster.R, '[kJ/kg]',
+          '\nTc =', thruster.Tc, '[K]',
+          '\nPc =', thruster.Pc, '[bar]')
     print('\nThroat conditions:'
-          '\nTt', thruster.Tt, '[K]',
-          '\nPt', thruster.Pt, '[bar]',
-          '\nAt =', thruster.noz.At, '[m^2]',
-          '\nRt =', thruster.noz.Rt*1000, '[mm]')
+          '\nRt =', thruster.Rt*1000, '[mm]',
+          '\nAt =', thruster.At, '[m^2]',
+          '\nTt =', thruster.Tt, '[K]',
+          '\nPt =', thruster.Pt, '[bar]')
     print('\nExit conditions:',
-          '\ne', thruster.noz.e,
-          '\nAe =', thruster.noz.Ae, '[m^2]',
-          '\nRe =', thruster.noz.Re*1000, '[mm]',
-          '\nL =', thruster.noz.L(), '[m]',
+          '\ne  =', thruster.e,
+          '\nAe =', thruster.Ae, '[m^2]',
+          '\nRe =', thruster.Re*1000, '[mm]',
+          '\nL  =', thruster.L, '[m]',
+          '\nmdot', thruster.mdot, '[kg/s]',
+          '\nMe =', thruster.M,
+          '\nve =', thruster.ve, '[m/s]',
+          '\nF  =', thruster.F, '[N]',
+          '\nIsp=', thruster.Isp, '[s]')
+    print('\nCharacteristic Values:',
+          '\nvc =', thruster.vc,
+          '\nCF =', thruster.CF,
           '\n-----')
-
 
 def solveMach(nozzle, k):
     """
-    :param nozzle:
-    :param k:
-    :return M:
     solve Mach number from area ratio by iteration. assume supersonic
     https://www.grc.nasa.gov/WWW/winddocs/utilities/b4wind_guide/mach.html
     """
@@ -207,52 +225,59 @@ def solveMach(nozzle, k):
     M = 1/sqrt(X)
     return M
 
-
 def main():
     thruster = init()
-    k = thruster.prop.k
-    R = thruster.prop.R
-    Tc = thruster.chbr.Tc
-    Pc = thruster.chbr.Pc
+    # retrieve constants
+    k = thruster.k
+    R = thruster.R
+    Tc = thruster.Tc
+    Pc = thruster.Pc
 
     # get inputs
     print('Set some initial conditions:')
-    thruster.noz.Re = float(input('Nozzle exit radius [mm]: '))/1000
-    Ae = thruster.noz.Ae  # resolve Ae from Re
-    L = float(input('Nozzle length [mm]: '))/1000
-#    thruster.noz.e = (float(input('Expansion ratio (Ae/At): ')))
+    thruster.Re = float(input('Nozzle exit radius [mm]: '))/1000
+    Ae = thruster.Ae  # resolve Ae from Re
+#    L = float(input('Nozzle length [mm]: '))/1000
+    thruster.Rt = float(input('Nozzle throat radius [mm]: '))/1000
+    At = thruster.At
+    L = (thruster.Re-thruster.Rt)/sin(radians(15))
+    thruster.L = L
 
     # throat conditions
-    At = pi*(sqrt(thruster.noz.Ae/pi)-2*L*sin(radians(15)))**2
-    thruster.noz.At = At
     critP = (2/(k+1))**(k/(k-1))
-    thruster.Pt = Pc*critP
-    Pt = thruster.Pt
-    thruster.Tt = Tc*(2/(k+1))
-    Tt = thruster.Tt
+    Pt = Pc*critP
+    Tt = Tc*(2/(k+1))
     mdot = (Pt/(R*Tt))*sqrt(k*R*Tt)*At
 
+    thruster.At = At
+    thruster.Pt = Pt
+    thruster.Tt = Tt
+    thruster.mdot = mdot
+
     # exit conditions
-    M = solveMach(thruster.noz, k)
+    M = solveMach(thruster, k)
     ve = sqrt(((2*k*R*Tc)/(k-1))*(1-(1/(1+((k-1)/2)*M**2))))
     Pe = Pc/((1+((k-1)/2)*M**2)**(k/(k-1)))
+
+    thruster.M = M
+    thruster.ve = ve
+    thruster.Pe = Pe
 
     # characteristic values
     vc = Pt*At/mdot
     CF = (ve/vc)+(Ae/At)*(Pe/Pc)
 
+    thruster.vc = vc
+    thruster.CF = CF
+
     # performance
     F = At*Pc*CF
     Isp = F/(g0*mdot)
 
-    print('\nDEBUG:',
-          '\n At =', At*1000, '[mm]',
-          '\n M  =', M,
-          '\n ve =', ve, '[m/s]',
-          '\n F  =', F, '[N]',
-          '\n Isp=', Isp, '[s]'
-          )
-#    display(thruster)
+    thruster.F = F
+    thruster.Isp = Isp
+
+    display(thruster)
     return
 
 if __name__ == "__main__":
