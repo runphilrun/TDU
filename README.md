@@ -26,6 +26,6 @@ $ tdu --help
 Run `ThrusterDesign.py` and input parameters when prompted.
 
 ## About & Documentation
-Please refer to the [Project Wiki](https://github.com/runphilrun/ThrusterDesign/wiki) for details on the code structure, more information about the project, and general theory.
+Please refer to the [STEMN project page](http://stemn.com/projects/thruster-design-tool) for detailed information about the project and general theory.
 
 > *If you encounter any bugs, please report them in the [Issue Tracker](https://github.com/runphilrun/ThrusterDesign/issues)!*
