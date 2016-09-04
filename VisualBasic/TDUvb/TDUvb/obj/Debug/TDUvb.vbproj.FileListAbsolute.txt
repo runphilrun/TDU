@@ -1,0 +1,11 @@
+D:\_Documents\git\TDU\VisualBasic\TDUvb\TDUvb\bin\Debug\TDUvb.exe.config
+D:\_Documents\git\TDU\VisualBasic\TDUvb\TDUvb\bin\Debug\TDUvb.exe
+D:\_Documents\git\TDU\VisualBasic\TDUvb\TDUvb\bin\Debug\TDUvb.pdb
+D:\_Documents\git\TDU\VisualBasic\TDUvb\TDUvb\bin\Debug\TDUvb.xml
+D:\_Documents\git\TDU\VisualBasic\TDUvb\TDUvb\obj\Debug\TDUvb.vbprojResolveAssemblyReference.cache
+D:\_Documents\git\TDU\VisualBasic\TDUvb\TDUvb\obj\Debug\TDUvb.Form1.resources
+D:\_Documents\git\TDU\VisualBasic\TDUvb\TDUvb\obj\Debug\TDUvb.Resources.resources
+D:\_Documents\git\TDU\VisualBasic\TDUvb\TDUvb\obj\Debug\TDUvb.vbproj.GenerateResource.Cache
+D:\_Documents\git\TDU\VisualBasic\TDUvb\TDUvb\obj\Debug\TDUvb.exe
+D:\_Documents\git\TDU\VisualBasic\TDUvb\TDUvb\obj\Debug\TDUvb.xml
+D:\_Documents\git\TDU\VisualBasic\TDUvb\TDUvb\obj\Debug\TDUvb.pdb
