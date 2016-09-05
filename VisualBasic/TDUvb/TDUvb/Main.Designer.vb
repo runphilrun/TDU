@@ -22,12 +22,12 @@ Partial Class Main
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Dim ChartArea2 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
-        Dim Legend2 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
-        Dim Series3 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
-        Dim Series4 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
+        Dim ChartArea3 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
+        Dim Legend3 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
+        Dim Series5 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
+        Dim Series6 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
-        Me.Label3 = New System.Windows.Forms.Label()
+        Me.LabelmMol = New System.Windows.Forms.Label()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
@@ -50,7 +50,7 @@ Partial Class Main
         Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.Label13 = New System.Windows.Forms.Label()
         Me.Label12 = New System.Windows.Forms.Label()
-        Me.Button1 = New System.Windows.Forms.Button()
+        Me.doMath = New System.Windows.Forms.Button()
         Me.Button2 = New System.Windows.Forms.Button()
         Me.GroupBox4 = New System.Windows.Forms.GroupBox()
         Me.Label18 = New System.Windows.Forms.Label()
@@ -94,7 +94,7 @@ Partial Class Main
         '
         'GroupBox1
         '
-        Me.GroupBox1.Controls.Add(Me.Label3)
+        Me.GroupBox1.Controls.Add(Me.LabelmMol)
         Me.GroupBox1.Controls.Add(Me.Label4)
         Me.GroupBox1.Controls.Add(Me.Label2)
         Me.GroupBox1.Controls.Add(Me.Label1)
@@ -106,15 +106,15 @@ Partial Class Main
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Propellant"
         '
-        'Label3
+        'LabelmMol
         '
-        Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(144, 52)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(34, 13)
-        Me.Label3.TabIndex = 3
-        Me.Label3.Text = "0.000"
-        Me.Label3.TextAlign = System.Drawing.ContentAlignment.TopRight
+        Me.LabelmMol.AutoSize = True
+        Me.LabelmMol.Location = New System.Drawing.Point(144, 52)
+        Me.LabelmMol.Name = "LabelmMol"
+        Me.LabelmMol.Size = New System.Drawing.Size(34, 13)
+        Me.LabelmMol.TabIndex = 3
+        Me.LabelmMol.Text = "0.000"
+        Me.LabelmMol.TextAlign = System.Drawing.ContentAlignment.TopRight
         '
         'Label4
         '
@@ -146,11 +146,14 @@ Partial Class Main
         '
         'ComboBox1
         '
+        Me.ComboBox1.ForeColor = System.Drawing.SystemColors.WindowText
         Me.ComboBox1.FormattingEnabled = True
+        Me.ComboBox1.Items.AddRange(New Object() {"Air", "Nitogen (N2)", "Helium", "Argon", "Xenon", "Ammonia", "Hydrazine (Simulated)"})
         Me.ComboBox1.Location = New System.Drawing.Point(9, 19)
         Me.ComboBox1.Name = "ComboBox1"
         Me.ComboBox1.Size = New System.Drawing.Size(166, 21)
         Me.ComboBox1.TabIndex = 0
+        Me.ComboBox1.Text = "Select Propellant"
         '
         'GroupBox2
         '
@@ -287,7 +290,7 @@ Partial Class Main
         Me.GroupBox3.Size = New System.Drawing.Size(187, 70)
         Me.GroupBox3.TabIndex = 2
         Me.GroupBox3.TabStop = False
-        Me.GroupBox3.Text = "GroupBox3"
+        Me.GroupBox3.Text = "Inlet Conditions"
         '
         'TextBox2
         '
@@ -321,14 +324,14 @@ Partial Class Main
         Me.Label12.TabIndex = 0
         Me.Label12.Text = "Chamber Pressure (bar)"
         '
-        'Button1
+        'doMath
         '
-        Me.Button1.Location = New System.Drawing.Point(207, 142)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(246, 36)
-        Me.Button1.TabIndex = 3
-        Me.Button1.Text = "Calculate"
-        Me.Button1.UseVisualStyleBackColor = True
+        Me.doMath.Location = New System.Drawing.Point(207, 142)
+        Me.doMath.Name = "doMath"
+        Me.doMath.Size = New System.Drawing.Size(246, 36)
+        Me.doMath.TabIndex = 3
+        Me.doMath.Text = "Calculate"
+        Me.doMath.UseVisualStyleBackColor = True
         '
         'Button2
         '
@@ -414,28 +417,28 @@ Partial Class Main
         '
         'NozzleVisualizer
         '
-        ChartArea2.AxisX.Minimum = 0R
-        ChartArea2.AxisX.Title = "x (mm)"
-        ChartArea2.AxisX.TitleAlignment = System.Drawing.StringAlignment.Far
-        ChartArea2.AxisY.Crossing = 0R
-        ChartArea2.Name = "ChartArea1"
-        Me.NozzleVisualizer.ChartAreas.Add(ChartArea2)
+        ChartArea3.AxisX.Minimum = 0R
+        ChartArea3.AxisX.Title = "x (mm)"
+        ChartArea3.AxisX.TitleAlignment = System.Drawing.StringAlignment.Far
+        ChartArea3.AxisY.Crossing = 0R
+        ChartArea3.Name = "ChartArea1"
+        Me.NozzleVisualizer.ChartAreas.Add(ChartArea3)
         Me.NozzleVisualizer.Cursor = System.Windows.Forms.Cursors.Default
-        Legend2.Enabled = False
-        Legend2.Name = "Legend1"
-        Me.NozzleVisualizer.Legends.Add(Legend2)
+        Legend3.Enabled = False
+        Legend3.Name = "Legend1"
+        Me.NozzleVisualizer.Legends.Add(Legend3)
         Me.NozzleVisualizer.Location = New System.Drawing.Point(207, 185)
         Me.NozzleVisualizer.Name = "NozzleVisualizer"
-        Series3.ChartArea = "ChartArea1"
-        Series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline
-        Series3.Legend = "Legend1"
-        Series3.Name = "TopContour"
-        Series4.ChartArea = "ChartArea1"
-        Series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline
-        Series4.Legend = "Legend1"
-        Series4.Name = "BotContour"
-        Me.NozzleVisualizer.Series.Add(Series3)
-        Me.NozzleVisualizer.Series.Add(Series4)
+        Series5.ChartArea = "ChartArea1"
+        Series5.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline
+        Series5.Legend = "Legend1"
+        Series5.Name = "TopContour"
+        Series6.ChartArea = "ChartArea1"
+        Series6.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline
+        Series6.Legend = "Legend1"
+        Series6.Name = "BotContour"
+        Me.NozzleVisualizer.Series.Add(Series5)
+        Me.NozzleVisualizer.Series.Add(Series6)
         Me.NozzleVisualizer.Size = New System.Drawing.Size(343, 213)
         Me.NozzleVisualizer.TabIndex = 6
         Me.NozzleVisualizer.Text = "Chart1"
@@ -630,7 +633,7 @@ Partial Class Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(566, 428)
+        Me.ClientSize = New System.Drawing.Size(566, 426)
         Me.Controls.Add(Me.CheckBox4)
         Me.Controls.Add(Me.CheckBox3)
         Me.Controls.Add(Me.CheckBox2)
@@ -640,7 +643,7 @@ Partial Class Main
         Me.Controls.Add(Me.NozzleVisualizer)
         Me.Controls.Add(Me.GroupBox4)
         Me.Controls.Add(Me.Button2)
-        Me.Controls.Add(Me.Button1)
+        Me.Controls.Add(Me.doMath)
         Me.Controls.Add(Me.GroupBox3)
         Me.Controls.Add(Me.GroupBox2)
         Me.Controls.Add(Me.GroupBox1)
@@ -670,7 +673,7 @@ Partial Class Main
     End Sub
 
     Friend WithEvents GroupBox1 As GroupBox
-    Friend WithEvents Label3 As Label
+    Friend WithEvents LabelmMol As Label
     Friend WithEvents Label4 As Label
     Friend WithEvents Label2 As Label
     Friend WithEvents Label1 As Label
@@ -693,7 +696,7 @@ Partial Class Main
     Friend WithEvents TextBox1 As TextBox
     Friend WithEvents TrackBar2 As TrackBar
     Friend WithEvents TrackBar1 As TrackBar
-    Friend WithEvents Button1 As Button
+    Friend WithEvents doMath As Button
     Friend WithEvents Button2 As Button
     Friend WithEvents GroupBox4 As GroupBox
     Friend WithEvents NozzleVisualizer As DataVisualization.Charting.Chart
