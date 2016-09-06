@@ -6,8 +6,6 @@
 
         ' math testing, At = 1, Ae = 2.005, k = 1.4
         ' From page 635, NASA 1135 http://www.nasa.gov/sites/default/files/734673main_Equations-Tables-Charts-CompressibleFlow-Report-1135.pdf
-        Dim tolerance = 0.0001
-
 
         Dim g0 = 9.81        ' [m/s^2] Standard gravity
         Dim R0 = 0.008314    ' [J/K*kmol] Universal gas constant
@@ -48,10 +46,10 @@
         Isp = F / (g0 * mdot)
 
         'math checkouts
-        Dim testMach As Boolean = M - 2.2 < tolerance
-        Dim testPres As Boolean = (Pe / Pt) - (0.9352 ^ -1) < tolerance
-        Dim testTemp As Boolean = (Te / Tc) - 0.5081 < tolerance
-        Dim testSpeed As Boolean = (ve / astar) - 1.71791 < tolerance
+        Dim testMach As Boolean = Math.Abs(M - 2.2) < 0.001
+        Dim testPres As Boolean = Math.Abs((Pe / Pt) - (0.09352)) < 0.00001
+        Dim testTemp As Boolean = Math.Abs((Te / Tt) - 0.5081) < 0.0001
+        Dim testSpeed As Boolean = Math.Abs((ve / astar) - 1.71791) < 0.00001
         Dim verdict As Boolean = testMach And testPres And testTemp And testSpeed 'true = pass, false = fail
         Dim verdictstring = vbCrLf & "Failed!"
         If verdict Then
@@ -61,7 +59,7 @@
         Dim testReport As String =
             "Test results for Ae/At = 2.005, k = 1.4:" & vbCrLf &
             "Mach: " & Convert.ToString(Format(M, "#.##")) & " " & Convert.ToString(testMach) & vbCrLf &
-            "Pres: " & Convert.ToString(Format(Pe / Pt, "#.####")) & " " & Convert.ToString(testPres) & vbCrLf &
+            "Pres: " & Convert.ToString(Format(Pe / Pt, "#.#####")) & " " & Convert.ToString(testPres) & vbCrLf &
             "Temp: " & Convert.ToString(Format(Te / Tt, "#.####")) & " " & Convert.ToString(testTemp) & vbCrLf &
             "Speed: " & Convert.ToString(Format(ve / astar, "#.#####")) & " " & Convert.ToString(testSpeed) & vbCrLf &
             verdictstring
