@@ -6,7 +6,7 @@
 
         ' math testing, At = 1, Ae = 2.005, k = 1.4
         ' From page 635, NASA 1135 http://www.nasa.gov/sites/default/files/734673main_Equations-Tables-Charts-CompressibleFlow-Report-1135.pdf
-        Dim tolerance = 0.001
+        Dim tolerance = 0.0001
 
 
         Dim g0 = 9.81        ' [m/s^2] Standard gravity
@@ -16,12 +16,12 @@
         Dim L, At, Pt, Tt, mdot, Ae, M, Pe, Te, ve, expansionRatio, F, Isp, CF, vc As Double ' outputs
 
         'DEBUG VALUES
-        At = 1.0
-        Ae = 2.005
+        At = 1.0 'm2
+        Ae = 2.005 'm2
         k = 1.4
-        mMol = 28.02
-        Pc = 25
-        Tc = 273
+        mMol = 28.02 'kJ/kmol
+        Pc = 25 'bar
+        Tc = 273 'K
         'END DEBUG VALUES
 
         Dim R = R0 / mMol
@@ -34,6 +34,7 @@
         Pt = Pc * critP
         Tt = Tc * (2 / (k + 1))
         mdot = (Pt / (R * Tt)) * Math.Sqrt(k * R * Tt) * At
+        Dim astar = Math.Sqrt(2 * k * R * Tt) 'speed of sound at throat
 
         M = solveMach(At, Ae, k)
         ve = Math.Sqrt(((2 * k * R * Tc) / (k - 1)) * (1 - (1 / (1 + ((k - 1) / 2) * M ^ 2))))
@@ -46,16 +47,24 @@
         F = At * Pc * CF
         Isp = F / (g0 * mdot)
 
-
+        'math checkouts
         Dim testMach As Boolean = M - 2.2 < tolerance
         Dim testPres As Boolean = (Pe / Pt) - (0.9352 ^ -1) < tolerance
+        Dim testTemp As Boolean = (Te / Tc) - 0.5081 < tolerance
+        Dim testSpeed As Boolean = (ve / astar) - 1.71791 < tolerance
+        Dim verdict As Boolean = testMach And testPres And testTemp And testSpeed 'true = pass, false = fail
+        Dim verdictstring = vbCrLf & "Failed!"
+        If verdict Then
+            verdictstring = vbCrLf & "Success!"
+        End If
 
         Dim testReport As String =
             "Test results for Ae/At = 2.005, k = 1.4:" & vbCrLf &
-            "Mach: " & Convert.ToString(testMach) & " " & Convert.ToString(M) & vbCrLf &
-            "Pres: " & Convert.ToString(testPres) & " " & Convert.ToString(Pe / Pt) & vbCrLf &
-            ""
-
+            "Mach: " & Convert.ToString(Format(M, "#.##")) & " " & Convert.ToString(testMach) & vbCrLf &
+            "Pres: " & Convert.ToString(Format(Pe / Pt, "#.####")) & " " & Convert.ToString(testPres) & vbCrLf &
+            "Temp: " & Convert.ToString(Format(Te / Tt, "#.####")) & " " & Convert.ToString(testTemp) & vbCrLf &
+            "Speed: " & Convert.ToString(Format(ve / astar, "#.#####")) & " " & Convert.ToString(testSpeed) & vbCrLf &
+            verdictstring
         MsgBox(testReport)
 
     End Sub
