@@ -18,7 +18,7 @@ function varargout = tdu % main function
     chamber_temperature = 273;
     temperature_units = '[K]';
     chamber_pressure = 1;
-    pressure_units = '[atm]';
+    pressure_units = '[bar]';
     
     % nozzle geometry
     exit_radius = .025; % radius at nozzle exit
