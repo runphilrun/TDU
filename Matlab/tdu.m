@@ -142,6 +142,6 @@ end
 function display(result)
     [n,~]=size(result);
     for i = 1:n 
-        fprintf('\n%24s\t%12d\t%s',result{i,:});
+        fprintf('\n%24s\t%12f\t%s',result{i,:});
     end
 end
