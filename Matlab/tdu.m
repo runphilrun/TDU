@@ -1,11 +1,13 @@
 function varargout = tdu % main function
+    clear all;
+    clc;
     %% universal constants
-    universal_gas_constant= 8.3144598 % [J/(mol*K)]
-    standard_gravity = 9.81 % [m/s^2]
+    universal_gas_constant= 8.3144598; % [J/(mol*K)]
+    standard_gravity = 9.81; % [m/s^2]
     
 %%  === EDIT THESE ===
     % gas properties of propellant
-    specific_heat_ratio = 1.4 % 1.4 for air
+    specific_heat_ratio = 1.4; % 1.4 for air
     molar_mass = .0289645; % [kg/mol]
     
     % chamber conditions
@@ -14,7 +16,8 @@ function varargout = tdu % main function
     
     % nozzle geometry
     exit_radius = .025; %[m] radius at nozzle exit
-    length = .05; %[m] permissible length of nozzle, throat to exit
+    throat_radius = .010; %[m] radius at nozzle throat
+    conical_half_angle = 15; %[degrees] half angle of conical nozzle, 15 degrees is optimal
 %   ===------------===   
 
 %% Math (the fun part)
@@ -33,29 +36,25 @@ function varargout = tdu % main function
 
     specific_gas_constant = universal_gas_constant/molar_mass; %[J/kgK]
     exit_area = pi*exit_radius^2; % [m^2]
-
-    %% Throat conditions
-    % at the throat, assume choked flow (M=1) and apply the equation
-    %   A_throat/A_exit =
-    %       Mach*(((specific_heat_ratio+1)/2)/(1+((specific_heat_ratio -
-    %       1)/2)*Mach^2))^((specific_heat_ratio+1)/(2*(specific_heat_ratio-1)))
-    throat_area = exit_area*(((specific_heat_ratio+1)/2)/(1+((specific_heat_ratio - 1)/2)))^((specific_heat_ratio+1)/(2*(specific_heat_ratio-1))); %[m^2]
-    throat_radius = sqrt(throat_area/pi); % [m]
-    conical_half_angle = atan((exit_radius-throat_radius)/length); % [radians]
+    throat_area = pi*throat_radius^2; % [m^2]
+    length = (exit_radius-throat_radius)/tan(deg2rad(conical_half_angle)); % [m]
     
-    % similarly, assuming isentropic and choked flow
-    throat_temperature = chamber_temperature*(2/(specific_heat_ratio+1));
-    throat_pressure = chamber_pressuure*(2/(specific_heat_ratio+1))^(specific_heat_ratio/(specific_heat_ratio-1));
+    %% Throat conditions
+    % We are designing a nozzle that "chokes" the fluid flow at the throat,
+    % so we assume that at the throat, Mach number is isentropically
+    % brought to the boundary between supersonic and subsonic flow (Mach=1)
+    throat_temperature = chamber_temperature*(2/(specific_heat_ratio+1)) %[K]
+    throat_pressure = chamber_pressure*(2/(specific_heat_ratio+1))^(specific_heat_ratio/(specific_heat_ratio-1)); %[atm]
     
     % use nozzle areas to find Mach number at the exit via the Newton-Raphson method
-    exit_mach = solve_mach(exit_area,1,1.4);
+    exit_mach = solve_mach(exit_area,throat_area,specific_heat_ratio);
 %   since
 %       mass_flow_rate = density*speed*cross_sectional_area
 %   and from the ideal gas law, PV=RT
-    throat_density = throat_pressure/(specific_gas_constant*throat_temperature);
+    throat_density = throat_pressure/(specific_gas_constant*throat_temperature); %[kg/m^3]
 %   and at the throat Mach = 1 so flow rate (speed of flow) is the fluid's speed of sound at the throat
     throat_flowrate = sqrt(specific_heat_ratio*specific_gas_constant*throat_temperature);
-    mass_flowrate = throat_density*throat_flowrate*throat_area;
+    mass_flowrate = throat_density*throat_flowrate*throat_area; %[kg/s]
 
     %% Exit conditions
 %   it's much easier to define the flow characteristics at the exit in
@@ -64,23 +63,25 @@ function varargout = tdu % main function
 %   these are ratios between the throat parameter (numerator) and the exit
 %   parameter (denominator). 
 %   For example, area_ratio = throat_area/exit_area
-
-    area_ratio = exit_mach(((specific_heat_ratio+1)/2)/(1+(specific_heat_ratio-1)/2*exit_mach^2))^((specific_heat_ratio+1)/(2*(specific_heat_ratio-1)));
-    temperature_ratio = 1+(specific_heat_ratio-1)/2*exit_mach^2;
+ 
+%(already know this one)    area_ratio = exit_mach(((specific_heat_ratio+1)/2)/(1+(specific_heat_ratio-1)/2*exit_mach^2))^((specific_heat_ratio+1)/(2*(specific_heat_ratio-1)));
+    temperature_ratio = 1+((specific_heat_ratio-1)/2)*exit_mach^2;
     pressure_ratio = temperature_ratio^((specific_heat_ratio-1)/specific_heat_ratio);
     
+    exit_temperature = chamber_temperature/temperature_ratio; % [K]
+    exit_pressure = chamber_pressure/pressure_ratio; % [atm]
     
+    exit_velocity = sqrt((2*specific_heat_ratio*specific_heat_ratio*chamber_temperature)/(specific_heat_ratio-1)*(1-1/(1+(specific_heat_ratio-1)/2*exit_mach^2))); % [m/s]
+    
+    %% Thrust and Specific Impulse
+    thrust = mass_flowrate*exit_velocity + exit_pressure*exit_area; %[N]
+    specific_impulse = thrust/(mass_flowrate*standard_gravity);
 end
 
-function Mach = solve_mach(A,A_throat,specific_heat_ratio)
+function Mach = solve_mach(A,At,k)
 %   solve Mach number from area ratio by Newton-Raphson Method. (assume
 %   supersonic)
 %   https://www.grc.nasa.gov/WWW/winddocs/utilities/b4wind_guide/mach.html
-    
-    % establish shorthand
-    At = A_throat;
-    k = specific_heat_ratio;
-
     P = 2/(k+1);
     Q = 1-P;
     R = (A/At).^((2*Q)/P);
@@ -96,4 +97,13 @@ function Mach = solve_mach(A,A_throat,specific_heat_ratio)
         X = Xnew;
     end
     Mach = 1/sqrt(X);
+end
+
+function displaystring = display(parameter_array)
+    % expects
+    %   parameter_array = [name, value, units]
+    % of types
+    %  [3-column array] = [string, double, string]
+    
+    
 end
