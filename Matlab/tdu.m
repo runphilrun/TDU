@@ -11,18 +11,18 @@ function varargout = tdu % main function
     % gas properties of propellant
     propellant_name = 'Air';
     specific_heat_ratio = 1.4; % 1.4 for air
-    molar_mass = .0289645; 
+    molar_mass = .0289645; % .0289645 for air
     molar_mass_units = '[kg/mol]';
     
     % chamber conditions
     chamber_temperature = 273;
     temperature_units = '[K]';
-    chamber_pressure = 1;
+    chamber_pressure = 1.01325; % 1.01325 bar = 1 atm
     pressure_units = '[bar]';
     
     % nozzle geometry
-    exit_radius = .025; % radius at nozzle exit
-    throat_radius = .010; % radius at nozzle throat
+    exit_radius = .014160; % radius at nozzle exit
+    throat_radius = .01; % radius at nozzle throat
     length_units = '[m]';
     conical_half_angle = 15; % half angle of conical nozzle, 15 degrees is optimal
     angle_units = '[deg]';
@@ -55,7 +55,7 @@ function varargout = tdu % main function
     % brought to the boundary between supersonic and subsonic flow (Mach=1)
     throat_temperature = chamber_temperature*(2/(specific_heat_ratio+1)); 
     throat_pressure = chamber_pressure*(2/(specific_heat_ratio+1))^(specific_heat_ratio/(specific_heat_ratio-1)); 
-    
+    throat_velocity = sqrt(specific_heat_ratio*specific_gas_constant*throat_temperature);
     % use nozzle areas to find Mach number at the exit via the Newton-Raphson method
     exit_mach = solve_mach(exit_area,throat_area,specific_heat_ratio);
 %   since
@@ -92,27 +92,38 @@ function varargout = tdu % main function
     isp_units='[s]';
     
     %% format & display outputs
+    linedivider='------------';
     result =  {'Propellant','',propellant_name;
+               linedivider,'','';
                'Specific heat ratio', specific_heat_ratio, unitless;
                'Molar mass', molar_mass, molar_mass_units;
                'Specific gas constant',specific_gas_constant,specific_gas_constant_units;
+               linedivider,'','';
                'Chamber temperature', chamber_temperature, temperature_units;
                'Chamber pressure', chamber_pressure, pressure_units;
                'Exit radius', exit_radius, length_units;
                'Throat radius', throat_radius, length_units;
                'Half-angle',conical_half_angle, angle_units;
+               linedivider,'','';
                'Length',length,length_units;
                'Exit area',exit_area,area_units;
                'Throat area',throat_area,area_units;
                'Throat temperature',throat_temperature,temperature_units;
                'Throat pressure',throat_pressure,pressure_units;
                'Mass flow rate',mass_flowrate,mass_flowrate_units;
-               'Exit Mach',exit_mach,unitless;
+               linedivider,'','';
                'Exit temperature',exit_temperature,temperature_units;
                'Exit pressure',exit_pressure,pressure_units;
+               linedivider,'','';
                'Exhaust velocity',exit_velocity,velocity_units;
                'Thrust',thrust,force_units;
                'Specific impulse',specific_impulse,isp_units;
+               linedivider,'','';
+               'Exit Mach',exit_mach,unitless;
+               'A/At',exit_area/throat_area,unitless;
+               'T/Tt',exit_temperature/throat_temperature,unitless;
+               'P/Pt',exit_pressure/throat_pressure,unitless;
+               'v/a',exit_velocity/throat_velocity,unitless;
                }; 
 
     display(result);
