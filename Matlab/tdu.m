@@ -121,9 +121,9 @@ function varargout = tdu % main function
                linedivider,'','';
                'Exit Mach',exit_mach,unitless;
                'A/At',exit_area/throat_area,unitless;
-               'T/Tt',exit_temperature/throat_temperature,unitless;
-               'P/Pt',exit_pressure/throat_pressure,unitless;
-               'v/a',exit_velocity/throat_velocity,unitless;
+               'T/Tc',exit_temperature/chamber_temperature,unitless;
+               'P/Pc',exit_pressure/chamber_pressure,unitless;
+               'v/at',exit_velocity/throat_velocity,unitless;
                }; 
 
     display(result);
