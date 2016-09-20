@@ -33,74 +33,79 @@
         End Select
     End Sub
     Private Sub doMath_Click(sender As Object, e As EventArgs) Handles doMath.Click
+
         ' set constants
         Dim g0 = 9.81        ' [m/s^2] Standard gravity
-        Dim R0 = 0.008314    ' [J/K*kmol] Universal gas constant
+        Dim universalGasConstant = 0.008314    ' [J/K*kmol] Universal gas constant
 
         ' get inputs
-        Dim mMol, k, Pc, Tc, alpha, Rt, Re As Double ' inputs
-        mMol = Convert.ToDouble(LabelmMol.Text)
-        k = Convert.ToDouble(Labelk.Text)
-        alpha = Convert.ToDouble(UpDownAlpha.Value) * Math.PI / 180 'convert to radians
-        Rt = Convert.ToDouble(UpDownRt.Value)
-        Re = Convert.ToDouble(UpDownRe.Value)
-        Pc = Convert.ToDouble(UpDownPc.Value)
-        Tc = Convert.ToDouble(updownTc.value)
-
-        Dim L, At, Pt, Tt, mdot, Ae, M, Pe, Te, ve, expansionRatio, F, Isp, CF, vc As Double ' outputs
+        Dim molarMass, specificHeatRatio, chamberPressure, chamberTemp, halfAngle, throatRadius, exitRadius As Double ' inputs
+        molarMass = Convert.ToDouble(LabelmMol.Text)
+        specificHeatRatio = Convert.ToDouble(Labelk.Text)
+        halfAngle = Convert.ToDouble(UpDownAlpha.Value) * Math.PI / 180 'convert to radians
+        throatRadius = Convert.ToDouble(UpDownRt.Value)
+        exitRadius = Convert.ToDouble(UpDownRe.Value)
+        chamberPressure = Convert.ToDouble(UpDownPc.Value)
+        chamberTemp = Convert.ToDouble(UpDownTc.Value)
+        If (exitRadius - throatRadius) < 0 Then
+            Throw New ApplicationException("Exit radius must be greater than throat radius")
+        End If
+        Dim Length, throatArea, throatPressure, throatTemp, massFlowRate, exitArea, exitMach, exitPressure, exitTemp, exitVelocity, expansionRatio, thrust, Isp, CF, vc As Double ' outputs
 
         ''DEBUG VALUES
         'At = 1.0 'm2
         'Ae = 2.005 'm2
         'k = 1.4
         'mMol = 28.02 'kJ/kmol
-        'Pc = 25 'bar
+        'Pc = 1 'bar
         'Tc = 273 'K
         ''END DEBUG VALUES
 
-        Dim R = R0 / mMol
-        At = (Rt / 1000) ^ 2 * Math.PI
-        Ae = (Re / 1000) ^ 2 * Math.PI
-        L = (Re - Rt) / Math.Sin(alpha)
-        expansionRatio = Ae / At
+        Dim specificGasConstant = universalGasConstant / molarMass
+        throatArea = (throatRadius / 1000) ^ 2 * Math.PI
+        exitArea = (exitRadius / 1000) ^ 2 * Math.PI
+        Length = (exitRadius - throatRadius) / Math.Sin(halfAngle)
+        expansionRatio = exitArea / throatArea
 
-        Dim critP = (2 / (k + 1)) ^ (k / (k - 1))
-        Pt = Pc * critP
-        Tt = Tc * (2 / (k + 1))
-        mdot = (Pt / (R * Tt)) * Math.Sqrt(k * R * Tt) * At
-        Dim astar = Math.Sqrt(2 * k * R * Tt) 'speed of sound at throat
+        Dim critP = (2 / (specificHeatRatio + 1)) ^ (specificHeatRatio / (specificHeatRatio - 1))
+        throatPressure = chamberPressure * critP
+        throatTemp = chamberTemp * (2 / (specificHeatRatio + 1))
+        massFlowRate = (throatPressure / (specificGasConstant * throatTemp)) * Math.Sqrt(specificHeatRatio * specificGasConstant * throatTemp) * throatArea
+        Dim aStar = Math.Sqrt(2 * specificHeatRatio * specificGasConstant * throatTemp) 'speed of sound at throat
 
-        M = solveMach(At, Ae, k)
-        ve = Math.Sqrt(((2 * k * R * Tc) / (k - 1)) * (1 - (1 / (1 + ((k - 1) / 2) * M ^ 2))))
-        Pe = Pc / ((1 + ((k - 1) / 2) * M ^ 2) ^ (k / (k - 1)))
-        Te = Tc / (1 + ((k - 1) / 2) * M ^ 2)
+        exitMach = solveMach(throatArea, exitArea, specificHeatRatio)
+        exitVelocity = Math.Sqrt(((2 * specificHeatRatio * specificGasConstant * chamberTemp) / (specificHeatRatio - 1)) * (1 - (1 / (1 + ((specificHeatRatio - 1) / 2) * exitMach ^ 2))))
+        Dim tempRatio = 1 + ((specificHeatRatio - 1) / 2) * exitMach ^ 2
+        Dim presRatio = tempRatio ^ ((specificHeatRatio - 1) / specificHeatRatio)
+        exitPressure = chamberPressure / presRatio
+        exitTemp = chamberTemp / tempRatio
 
-        vc = Pt * At / mdot
-        CF = (ve / vc) + (Ae / At) * (Pe / Pc)
+        vc = throatPressure * throatArea / massFlowRate
+        CF = (exitVelocity / vc) + (exitArea / throatArea) * (exitPressure / chamberPressure)
 
-        F = At * Pc * CF
-        Isp = F / (g0 * mdot)
+        thrust = massFlowRate * exitVelocity + exitPressure * exitArea
+        Isp = thrust / (g0 * massFlowRate)
 
         ' set outputs
-        LabelL.Text = L
+        LabelL.Text = Length
         Labele.Text = expansionRatio
-        LabelPt.Text = Pt
-        LabelTt.Text = Tt
-        Labelmdot.Text = mdot
-        LabelPe.Text = Pe
-        LabelTe.Text = Te
-        LabelM.Text = M
-        Labelve.Text = ve
-        LabelF.Text = F
+        LabelPt.Text = throatPressure
+        LabelTt.Text = throatTemp
+        Labelmdot.Text = massFlowRate
+        LabelPe.Text = exitPressure
+        LabelTe.Text = exitTemp
+        LabelM.Text = exitMach
+        Labelve.Text = exitVelocity
+        LabelF.Text = thrust
         LabelIsp.Text = Isp
 
         'math checkouts
         ' From page 635, NASA 1135 http://www.nasa.gov/sites/default/files/734673main_Equations-Tables-Charts-CompressibleFlow-Report-1135.pdf
-
-        Dim testMach As Boolean = Math.Abs(M - 2.2) < 0.001
-        Dim testPres As Boolean = Math.Abs((Pe / Pt) - (0.09352)) < 0.00001
-        Dim testTemp As Boolean = Math.Abs((Te / Tt) - 0.5081) < 0.0001
-        Dim testSpeed As Boolean = Math.Abs((ve / astar) - 1.71791) < 0.00001
+        Dim tolerance = 0.01
+        Dim testMach As Boolean = Math.Abs(exitMach - 2.2) < tolerance
+        Dim testPres As Boolean = Math.Abs((exitPressure / chamberPressure) - (0.09352)) < tolerance
+        Dim testTemp As Boolean = Math.Abs((exitTemp / chamberTemp) - 0.5081) < tolerance
+        Dim testSpeed As Boolean = Math.Abs((exitVelocity / aStar) - 1.71791) < tolerance
         Dim verdict As Boolean = testMach And testPres And testTemp And testSpeed 'true = pass, false = fail
         Dim verdictstring = vbCrLf & "Failed!"
         If verdict Then
@@ -109,10 +114,10 @@
 
         Dim testReport As String =
             "Test results for Ae/At = 2.005, k = 1.4:" & vbCrLf &
-            "Mach: " & Convert.ToString(Format(M, "#.##")) & " " & Convert.ToString(testMach) & vbCrLf &
-            "Pres: " & Convert.ToString(Format(Pe / Pt, "#.#####")) & " " & Convert.ToString(testPres) & vbCrLf &
-            "Temp: " & Convert.ToString(Format(Te / Tt, "#.####")) & " " & Convert.ToString(testTemp) & vbCrLf &
-            "Speed: " & Convert.ToString(Format(ve / astar, "#.#####")) & " " & Convert.ToString(testSpeed) & vbCrLf &
+            "Mach: " & Convert.ToString(Format(exitMach, "#.####")) & " " & Convert.ToString(testMach) & vbCrLf &
+            "Pres: " & Convert.ToString(Format((exitPressure / chamberPressure), "#.####")) & " " & Convert.ToString(testPres) & vbCrLf &
+            "Temp: " & Convert.ToString(Format(exitTemp / chamberTemp, "#.####")) & " " & Convert.ToString(testTemp) & vbCrLf &
+            "Speed: " & Convert.ToString(Format(exitVelocity / aStar, "#.####")) & " " & Convert.ToString(testSpeed) & vbCrLf &
             verdictstring
         MsgBox(testReport)
 
@@ -129,7 +134,7 @@
         Dim X = 1 / ((1 + R2) + Math.Sqrt(R2 * (R2 + 2)))  ' initial guess
         Dim diff = 1.0  ' initalize iteration difference
         Dim F, dF, Xnew, M
-        While Math.Abs(diff) > 0.01
+        While Math.Abs(diff) > 0.0001
             F = (P * X + Q) ^ (1 / P) - R1 * X
             dF = (P * X + Q) ^ ((1 / P) - 1) - R1
             Xnew = X - F / dF
@@ -181,4 +186,5 @@
         LabelL.Text = L
         Labele.Text = expansionratio
     End Sub
+
 End Class

@@ -22,10 +22,10 @@ Partial Class Main
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Dim ChartArea7 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
-        Dim Legend7 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
-        Dim Series13 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
-        Dim Series14 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
+        Dim ChartArea9 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
+        Dim Legend9 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
+        Dim Series17 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
+        Dim Series18 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.LabelmMol = New System.Windows.Forms.Label()
         Me.Labelk = New System.Windows.Forms.Label()
@@ -46,6 +46,8 @@ Partial Class Main
         Me.Label6 = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
+        Me.UpDownTc = New System.Windows.Forms.NumericUpDown()
+        Me.UpDownPc = New System.Windows.Forms.NumericUpDown()
         Me.Label13 = New System.Windows.Forms.Label()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.doMath = New System.Windows.Forms.Button()
@@ -76,8 +78,6 @@ Partial Class Main
         Me.CheckBox2 = New System.Windows.Forms.CheckBox()
         Me.CheckBox3 = New System.Windows.Forms.CheckBox()
         Me.CheckBox4 = New System.Windows.Forms.CheckBox()
-        Me.UpDownPc = New System.Windows.Forms.NumericUpDown()
-        Me.UpDownTc = New System.Windows.Forms.NumericUpDown()
         Me.GroupBox1.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         CType(Me.TrackBar2, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -86,12 +86,12 @@ Partial Class Main
         CType(Me.UpDownRt, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.UpDownAlpha, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox3.SuspendLayout()
+        CType(Me.UpDownTc, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.UpDownPc, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox4.SuspendLayout()
         CType(Me.NozzleVisualizer, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox5.SuspendLayout()
         Me.GroupBox6.SuspendLayout()
-        CType(Me.UpDownPc, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.UpDownTc, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'GroupBox1
@@ -212,17 +212,19 @@ Partial Class Main
         '
         'UpDownRe
         '
-        Me.UpDownRe.Increment = New Decimal(New Integer() {5, 0, 0, 65536})
-        Me.UpDownRe.Location = New System.Drawing.Point(286, 59)
-        Me.UpDownRe.Minimum = New Decimal(New Integer() {2, 0, 0, 0})
+        Me.UpDownRe.DecimalPlaces = 4
+        Me.UpDownRe.Increment = New Decimal(New Integer() {1, 0, 0, 131072})
+        Me.UpDownRe.Location = New System.Drawing.Point(273, 59)
+        Me.UpDownRe.Minimum = New Decimal(New Integer() {1001, 0, 0, 196608})
         Me.UpDownRe.Name = "UpDownRe"
-        Me.UpDownRe.Size = New System.Drawing.Size(47, 20)
+        Me.UpDownRe.Size = New System.Drawing.Size(60, 20)
         Me.UpDownRe.TabIndex = 8
-        Me.UpDownRe.Value = New Decimal(New Integer() {2, 0, 0, 0})
+        Me.UpDownRe.Value = New Decimal(New Integer() {14160, 0, 0, 262144})
         '
         'UpDownRt
         '
-        Me.UpDownRt.Increment = New Decimal(New Integer() {5, 0, 0, 65536})
+        Me.UpDownRt.DecimalPlaces = 4
+        Me.UpDownRt.Increment = New Decimal(New Integer() {1, 0, 0, 131072})
         Me.UpDownRt.Location = New System.Drawing.Point(108, 59)
         Me.UpDownRt.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.UpDownRt.Name = "UpDownRt"
@@ -310,6 +312,27 @@ Partial Class Main
         Me.GroupBox3.TabStop = False
         Me.GroupBox3.Text = "Inlet Conditions"
         '
+        'UpDownTc
+        '
+        Me.UpDownTc.Location = New System.Drawing.Point(134, 41)
+        Me.UpDownTc.Maximum = New Decimal(New Integer() {5000, 0, 0, 0})
+        Me.UpDownTc.Minimum = New Decimal(New Integer() {100, 0, 0, 0})
+        Me.UpDownTc.Name = "UpDownTc"
+        Me.UpDownTc.Size = New System.Drawing.Size(47, 20)
+        Me.UpDownTc.TabIndex = 13
+        Me.UpDownTc.Value = New Decimal(New Integer() {273, 0, 0, 0})
+        '
+        'UpDownPc
+        '
+        Me.UpDownPc.DecimalPlaces = 2
+        Me.UpDownPc.Increment = New Decimal(New Integer() {1, 0, 0, 131072})
+        Me.UpDownPc.Location = New System.Drawing.Point(134, 18)
+        Me.UpDownPc.Minimum = New Decimal(New Integer() {1, 0, 0, 131072})
+        Me.UpDownPc.Name = "UpDownPc"
+        Me.UpDownPc.Size = New System.Drawing.Size(47, 20)
+        Me.UpDownPc.TabIndex = 12
+        Me.UpDownPc.Value = New Decimal(New Integer() {100, 0, 0, 131072})
+        '
         'Label13
         '
         Me.Label13.AutoSize = True
@@ -324,9 +347,9 @@ Partial Class Main
         Me.Label12.AutoSize = True
         Me.Label12.Location = New System.Drawing.Point(7, 20)
         Me.Label12.Name = "Label12"
-        Me.Label12.Size = New System.Drawing.Size(117, 13)
+        Me.Label12.Size = New System.Drawing.Size(119, 13)
         Me.Label12.TabIndex = 0
-        Me.Label12.Text = "Chamber Pressure (bar)"
+        Me.Label12.Text = "Chamber Pressure (atm)"
         '
         'doMath
         '
@@ -422,28 +445,28 @@ Partial Class Main
         '
         'NozzleVisualizer
         '
-        ChartArea7.AxisX.Minimum = 0R
-        ChartArea7.AxisX.Title = "x (mm)"
-        ChartArea7.AxisX.TitleAlignment = System.Drawing.StringAlignment.Far
-        ChartArea7.AxisY.Crossing = 0R
-        ChartArea7.Name = "ChartArea1"
-        Me.NozzleVisualizer.ChartAreas.Add(ChartArea7)
+        ChartArea9.AxisX.Minimum = 0R
+        ChartArea9.AxisX.Title = "x (mm)"
+        ChartArea9.AxisX.TitleAlignment = System.Drawing.StringAlignment.Far
+        ChartArea9.AxisY.Crossing = 0R
+        ChartArea9.Name = "ChartArea1"
+        Me.NozzleVisualizer.ChartAreas.Add(ChartArea9)
         Me.NozzleVisualizer.Cursor = System.Windows.Forms.Cursors.Default
-        Legend7.Enabled = False
-        Legend7.Name = "Legend1"
-        Me.NozzleVisualizer.Legends.Add(Legend7)
+        Legend9.Enabled = False
+        Legend9.Name = "Legend1"
+        Me.NozzleVisualizer.Legends.Add(Legend9)
         Me.NozzleVisualizer.Location = New System.Drawing.Point(207, 185)
         Me.NozzleVisualizer.Name = "NozzleVisualizer"
-        Series13.ChartArea = "ChartArea1"
-        Series13.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline
-        Series13.Legend = "Legend1"
-        Series13.Name = "TopContour"
-        Series14.ChartArea = "ChartArea1"
-        Series14.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline
-        Series14.Legend = "Legend1"
-        Series14.Name = "BotContour"
-        Me.NozzleVisualizer.Series.Add(Series13)
-        Me.NozzleVisualizer.Series.Add(Series14)
+        Series17.ChartArea = "ChartArea1"
+        Series17.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline
+        Series17.Legend = "Legend1"
+        Series17.Name = "TopContour"
+        Series18.ChartArea = "ChartArea1"
+        Series18.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline
+        Series18.Legend = "Legend1"
+        Series18.Name = "BotContour"
+        Me.NozzleVisualizer.Series.Add(Series17)
+        Me.NozzleVisualizer.Series.Add(Series18)
         Me.NozzleVisualizer.Size = New System.Drawing.Size(343, 213)
         Me.NozzleVisualizer.TabIndex = 6
         Me.NozzleVisualizer.Text = "Chart1"
@@ -634,27 +657,6 @@ Partial Class Main
         Me.CheckBox4.Text = "Temp"
         Me.CheckBox4.UseVisualStyleBackColor = True
         '
-        'UpDownPc
-        '
-        Me.UpDownPc.DecimalPlaces = 2
-        Me.UpDownPc.Increment = New Decimal(New Integer() {1, 0, 0, 131072})
-        Me.UpDownPc.Location = New System.Drawing.Point(134, 18)
-        Me.UpDownPc.Minimum = New Decimal(New Integer() {1, 0, 0, 131072})
-        Me.UpDownPc.Name = "UpDownPc"
-        Me.UpDownPc.Size = New System.Drawing.Size(47, 20)
-        Me.UpDownPc.TabIndex = 12
-        Me.UpDownPc.Value = New Decimal(New Integer() {101, 0, 0, 131072})
-        '
-        'UpDownTc
-        '
-        Me.UpDownTc.Location = New System.Drawing.Point(134, 41)
-        Me.UpDownTc.Maximum = New Decimal(New Integer() {5000, 0, 0, 0})
-        Me.UpDownTc.Minimum = New Decimal(New Integer() {100, 0, 0, 0})
-        Me.UpDownTc.Name = "UpDownTc"
-        Me.UpDownTc.Size = New System.Drawing.Size(47, 20)
-        Me.UpDownTc.TabIndex = 13
-        Me.UpDownTc.Value = New Decimal(New Integer() {273, 0, 0, 0})
-        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -686,6 +688,8 @@ Partial Class Main
         CType(Me.UpDownAlpha, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox3.ResumeLayout(False)
         Me.GroupBox3.PerformLayout()
+        CType(Me.UpDownTc, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.UpDownPc, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox4.ResumeLayout(False)
         Me.GroupBox4.PerformLayout()
         CType(Me.NozzleVisualizer, System.ComponentModel.ISupportInitialize).EndInit()
@@ -693,8 +697,6 @@ Partial Class Main
         Me.GroupBox5.PerformLayout()
         Me.GroupBox6.ResumeLayout(False)
         Me.GroupBox6.PerformLayout()
-        CType(Me.UpDownPc, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.UpDownTc, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
