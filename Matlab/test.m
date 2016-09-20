@@ -8,19 +8,19 @@ function varargout = tdu % main function
     
 %%  === EDIT THESE ===
     % gas properties of propellant
-    propellant_name = 'Air';
-    specific_heat_ratio = 1.4; % 1.4 for air
-    molar_mass = .0289645; % .0289645 for air
+    propellant_name = 'steam';
+    specific_heat_ratio = 1.33; % 1.4 for air
+    molar_mass = .0180153; % .0289645 for air
     molar_mass_units = '[kg/mol]';
     
     % chamber conditions
-    chamber_temperature = 273; % 273 K = 0C
+    chamber_temperature = 375;
     temperature_units = '[K]';
     chamber_pressure = 1.01325; % 1.01325 bar = 1 atm
     pressure_units = '[bar]';
     
     % nozzle geometry
-    exit_radius = .014160; % radius at nozzle exit
+    exit_radius = .014142; % radius at nozzle exit
     throat_radius = .01; % radius at nozzle throat
     length_units = '[m]';
     conical_half_angle = 15; % half angle of conical nozzle, 15 degrees is optimal
