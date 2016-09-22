@@ -17,7 +17,7 @@ function varargout = tdu % main function
     chamber_temperature = 273;
     temperature_units = '[K]';
     chamber_pressure = 101325; % 1.01325 bar = 1 atm
-    pressure_units = '[Pa]';
+    pressure_units = '[bar]';
     
     % nozzle geometry
     exit_radius = .025; % radius at nozzle exit
@@ -81,7 +81,7 @@ function varargout = tdu % main function
     exit_temperature = chamber_temperature/temperature_ratio; 
     exit_pressure = chamber_pressure/pressure_ratio; 
     
-    exit_velocity = sqrt((2*specific_heat_ratio*specific_gas_constant*chamber_temperature)/(specific_heat_ratio-1)*(1-1/(1+(specific_heat_ratio-1)/2*exit_mach^2)));
+    exit_velocity = sqrt((2*specific_heat_ratio*specific_heat_ratio*chamber_temperature)/(specific_heat_ratio-1)*(1-1/(1+(specific_heat_ratio-1)/2*exit_mach^2)));
     velocity_units = '[m/s]';
     
     %% Thrust and Specific Impulse
