@@ -244,10 +244,11 @@ def main():
     thruster.L = L
 
     # throat conditions
-    critP = (2/(k+1))**(k/(k-1))
-    Pt = Pc*critP
     Tt = Tc*(2/(k+1))
-    mdot = (Pt/(R*Tt))*sqrt(k*R*Tt)*At
+	Pt = Pc*(2/(k+1))**(k/(k-1))
+    throatDensity=Pt/(R*Tt)
+	vt = sqrt(k*R*Tt)
+	mdot=throatDensity*vt*At
 
     thruster.At = At
     thruster.Pt = Pt
@@ -257,7 +258,10 @@ def main():
     # exit conditions
     M = solveMach(thruster, k)
     ve = sqrt(((2*k*R*Tc)/(k-1))*(1-(1/(1+((k-1)/2)*M**2))))
-    Pe = Pc/((1+((k-1)/2)*M**2)**(k/(k-1)))
+	tempRatio = 1+((k-1)/2)*M**2
+	presRatio = tempRatio**((k-1)/k)
+	Te = Tc/tempRatio
+    Pe = Pc/presRatio
 
     thruster.M = M
     thruster.ve = ve
@@ -271,7 +275,7 @@ def main():
     thruster.CF = CF
 
     # performance
-    F = At*Pc*CF
+    F = mdot*ve+Pe*Ae
     Isp = F/(g0*mdot)
 
     thruster.F = F
