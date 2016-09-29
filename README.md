@@ -19,6 +19,14 @@ The thruster's nozzle, propellant, and chamber conditions each have a huge impac
 * Allow the user to easily tweak parameters.
 
 ## Usage
+### Matlab
+Open `Matlab/tdu.m` in Matlab 2014 or newer.
+Edit fields as indicated to specify the propellant gas properties and nozzle dimensions of the engine, then run the script.
+Mach number, temperature ratio, and pressure ratio at the exit of the nozzle agree with [NASA Report 1135](http://www.nasa.gov/sites/default/files/734673main_Equations-Tables-Charts-CompressibleFlow-Report-1135.pdf) for air at 1 atm with an area ratio of 2.005.
+
+### Python
+! OUTPUT HAS NOT BEEN VERIFIED. PLEASE CONTRIBUTE TO THE [ISSUE TRACKER](https://github.com/runphilrun/TDU/issues) !
+
 ```bash
 $ pip install tdu
 $ tdu --help
