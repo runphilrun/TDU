@@ -16,7 +16,7 @@ function varargout = tdu % main function
     % chamber conditions
     chamber_temperature = 273; % 273 K = 0C
     temperature_units = '[K]';
-    chamber_pressure = 1.01325; % 1 atm = 101325 Pa
+    chamber_pressure = 101325; % 1 atm = 101325 Pa
     pressure_units = '[Pa]';
     
     % nozzle geometry
