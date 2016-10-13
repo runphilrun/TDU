@@ -84,16 +84,16 @@ def main():
           '\nk  =', k,
           '\nR  =', R, '[kJ/kg]',
           '\nTc =', Tc, '[K]',
-          '\nPc =', Pc, '[bar]')
+          '\nPc =', Pc, 'Pa')
     print('\nThroat conditions:'
-          '\nRt =', Rt*1000, '[mm]',
+          '\nRt =', Rt, '[m]',
           '\nAt =', At, '[m^2]',
           '\nTt =', Tt, '[K]',
           '\nPt =', Pt, '[bar]')
     print('\nExit conditions:',
           '\ne  =', e,
           '\nAe =', Ae, '[m^2]',
-          '\nRe =', Re*1000, '[mm]',
+          '\nRe =', Re, '[m]',
           '\nL  =', L, '[m]',
           '\nmdot', mdot, '[kg/s]',
           '\nMe =', M,
