@@ -31,6 +31,7 @@ $ pip install tdu
 $ tdu --help
 ```
 Set propellant gas properties, nozzle geometry and chamber conditions in `config.ini`.
+
 Run `tdu.py`.
 
 ## About & Documentation
