@@ -30,7 +30,8 @@ Mach number, temperature ratio, and pressure ratio at the exit of the nozzle agr
 $ pip install tdu
 $ tdu --help
 ```
-Set propellant gas properties, nozzle geometry and chamber conditions in `config.ini` then Run `tdu.py`.
+Set propellant gas properties, nozzle geometry and chamber conditions in `config.ini`.
+Run `tdu.py`.
 
 ## About & Documentation
 Please refer to the [STEMN project page](http://stemn.com/projects/thruster-design-tool) for detailed information about the project and general theory.
