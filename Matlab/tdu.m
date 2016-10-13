@@ -10,7 +10,7 @@ function varargout = tdu % main function
     % gas properties of propellant
     propellant_name = 'Air';
     specific_heat_ratio = 1.4; % 1.4 for air
-    molar_mass = .0289645; % .0289645 for air
+    molecular_weight = .0289645; % .0289645 for air
     molar_mass_units = '[kg/mol]';
     
     % chamber conditions
@@ -41,7 +41,7 @@ function varargout = tdu % main function
 %              \-
 %   ********************************
 
-    specific_gas_constant = universal_gas_constant/molar_mass; 
+    specific_gas_constant = universal_gas_constant/molecular_weight; 
     specific_gas_constant_units = '[J/kg K]';
     exit_area = pi*exit_radius^2; 
     throat_area = pi*throat_radius^2; 
@@ -95,7 +95,7 @@ function varargout = tdu % main function
     result =  {'Propellant','',propellant_name;
                linedivider,'','';
                'Specific heat ratio', specific_heat_ratio, unitless;
-               'Molar mass', molar_mass, molar_mass_units;
+               'Molar mass', molecular_weight, molar_mass_units;
                'Specific gas constant',specific_gas_constant,specific_gas_constant_units;
                linedivider,'','';
                'Chamber temperature', chamber_temperature, temperature_units;
