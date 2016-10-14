@@ -20,8 +20,8 @@ function varargout = tdu % main function
     pressure_units = '[Pa]';
     
     % nozzle geometry
-    exit_radius = .014160; % radius at nozzle exit
-    throat_radius = .01; % radius at nozzle throat
+    exit_radius = .00708; % radius at nozzle exit
+    throat_radius = .005; % radius at nozzle throat
     length_units = '[m]';
     conical_half_angle = 15; % half angle of conical nozzle, 15 degrees is optimal
     angle_units = '[deg]';
@@ -102,6 +102,8 @@ function varargout = tdu % main function
                'Chamber pressure', chamber_pressure, pressure_units;
                'Exit radius', exit_radius, length_units;
                'Throat radius', throat_radius, length_units;
+               'Exit area',exit_area,'[m^2]';
+               'Throat area',throat_area,'[m^2]';
                'Half-angle',conical_half_angle, angle_units;
                linedivider,'','';
                'Length',length,length_units;
