@@ -1,6 +1,7 @@
 function varargout = tdu % main function
     clear all;
     clc;
+    format long
     %% universal constants
     universal_gas_constant= 8.3144598; % [J/(mol*K)]
     standard_gravity = 9.81; % [m/s^2]
@@ -154,6 +155,7 @@ end
 function display(result)
     [n,~]=size(result);
     for i = 1:n 
-        fprintf('\n%24s\t%12f\t%s',result{i,:});
+        fprintf('\n%24s\t%15.8f\t%s',result{i,:});
     end
+    fprintf('\n')
 end
