@@ -1,11 +1,11 @@
 # Thruster Design Utility
 [![Documentation Status](https://readthedocs.org/projects/thrusterdesign/badge/?version=latest)](http://thrusterdesign.readthedocs.io/en/latest/?badge=latest)
-[![Build status](https://img.shields.io/travis/runphilrun/ThrusterDesign.svg?style=flat-square)](https://travis-ci.org/runphilrun/ThrusterDesign)
-[![GitHub issues](https://img.shields.io/github/issues/runphilrun/ThrusterDesign.svg?style=flat-square)](https://github.com/runphilrun/ThrusterDesign/issues)
-[![PyPI](https://img.shields.io/pypi/v/thrusted.svg?style=flat-square)](https://pypi.python.org/pypi/thrusted)
-[![GitHub stars](https://img.shields.io/github/stars/runphilrun/ThrusterDesign.svg?style=flat-square)](https://github.com/runphilrun/ThrusterDesign/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/runphilrun/ThrusterDesign.svg?style=flat-square)](https://github.com/runphilrun/ThrusterDesign/network)
-[![License](https://img.shields.io/github/license/runphilrun/ThrusterDesign.svg?style=flat-square)](https://github.com/runphilrun/ThrusterDesign/blob/master/LICENSE.md)
+[![Build status](https://travis-ci.org/runphilrun/TDU.svg?style=flat-square)](https://travis-ci.org/runphilrun/TDU)
+[![GitHub issues](https://img.shields.io/github/issues/runphilrun/TDU.svg)](https://github.com/runphilrun/TDU/issues)
+[![PyPI](https://img.shields.io/pypi/v/tdu.svg?style=flat-square)](https://pypi.python.org/pypi/tdu)
+[![GitHub stars](https://img.shields.io/github/stars/runphilrun/TDU.svg)](https://github.com/runphilrun/TDU/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/runphilrun/TDU.svg)](https://github.com/runphilrun/TDU/network)
+[![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/runphilrun/TDU/master/LICENSE.md)
 
 
 > Tool to aid in design of small monopropellant thrusters. *[View this project on STEMN](http://stemn.com/projects/thruster-design-tool)*
@@ -19,13 +19,22 @@ The thruster's nozzle, propellant, and chamber conditions each have a huge impac
 * Allow the user to easily tweak parameters.
 
 ## Usage
+### Matlab
+Open `Matlab/tdu.m` in Matlab 2014 or newer.
+Edit fields as indicated to specify the propellant gas properties and nozzle dimensions of the engine, then run the script.
+Mach number, temperature ratio, and pressure ratio at the exit of the nozzle agree with [NASA Report 1135](http://www.nasa.gov/sites/default/files/734673main_Equations-Tables-Charts-CompressibleFlow-Report-1135.pdf) for air at 1 atm with an area ratio of 2.005.
+
+### Python
+
 ```bash
 $ pip install tdu
 $ tdu --help
 ```
-Run `ThrusterDesign.py` and input parameters when prompted.
+Set propellant gas properties, nozzle geometry and chamber conditions in `config.ini`.
+
+Run `tdu.py`.
 
 ## About & Documentation
-Please refer to the [Project Wiki](https://github.com/runphilrun/ThrusterDesign/wiki) for details on the code structure, more information about the project, and general theory.
+Please refer to the [STEMN project page](http://stemn.com/projects/thruster-design-tool) for detailed information about the project and general theory.
 
 > *If you encounter any bugs, please report them in the [Issue Tracker](https://github.com/runphilrun/ThrusterDesign/issues)!*

@@ -29,6 +29,10 @@ clean:
 	rm -rf ./src/thrusted.egg-info
 	rm -rf ./.doctrees
 
+deploy:
+	$(setup.py) register -r ${source}
+	$(setup.py) sdist upload -r ${source}
+
 help:
 	@echo 'Makefile build automation                                              '
 	@echo '                                                                       '
