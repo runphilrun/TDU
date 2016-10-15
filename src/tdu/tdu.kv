@@ -1,0 +1,77 @@
+#:kivy 1.7.1
+
+<IniForm>:
+    GridLayout:
+        cols: 2
+
+        name: name
+        k: k
+        mw: mw
+
+        re: re
+        rt: rt
+        al: al
+
+        tc: tc
+        pc: pc
+
+        Label:
+            text: 'name'
+            size_hint: (.5,1)
+        TextInput:
+            id: name
+            text: root.get_name()
+
+        Label:
+            text: 'k'
+            size_hint: (.5,1)
+        TextInput:
+            id: k
+            text: root.get_k()
+
+        Label:
+            text: 'MW'
+            size_hint: (.5,1)
+        TextInput:
+            id: mw
+            text: root.get_MW()
+
+        Label:
+            text: 'Re'
+            size_hint: (.5,1)
+        TextInput:
+            id: re 
+            text: root.get_Re()
+
+        Label:
+            text: 'Rt'
+            size_hint: (.5,1)
+        TextInput:
+            id: rt
+            text: root.get_Rt()
+
+        Label:
+            text: 'alpha'
+            size_hint: (.5,1)
+        TextInput:
+            id: al
+            text: root.get_alpha()
+
+        Label:
+            text: 'Tc'
+            size_hint: (.5,1)
+        TextInput:
+            id: tc
+            text: root.get_Tc()
+
+        Label:
+            text: 'pc'
+            size_hint: (.5,1)
+        TextInput:
+            id: pc
+            text: root.get_Pc()
+
+    Button:
+        text: "Submit"
+        on_press: root.write(name, k, mw, re, rt, al, tc, pc)
+        size_hint: (1, .1)
