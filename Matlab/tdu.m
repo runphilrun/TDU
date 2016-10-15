@@ -23,6 +23,8 @@ function varargout = tdu % main function
     % nozzle geometry
     exit_radius = .00708; % radius at nozzle exit
     throat_radius = .005; % radius at nozzle throat
+%     exit_radius = .00708; % radius at nozzle exit
+%     throat_radius = .005; % radius at nozzle throat
     length_units = '[m]';
     conical_half_angle = 15; % half angle of conical nozzle, 15 degrees is optimal
     angle_units = '[deg]';
@@ -77,7 +79,7 @@ function varargout = tdu % main function
  
 %(already know this one)    area_ratio = exit_mach(((specific_heat_ratio+1)/2)/(1+(specific_heat_ratio-1)/2*exit_mach^2))^((specific_heat_ratio+1)/(2*(specific_heat_ratio-1)));
     temperature_ratio = 1+((specific_heat_ratio-1)/2)*exit_mach^2;
-    pressure_ratio = temperature_ratio^((specific_heat_ratio-1)/specific_heat_ratio);
+    pressure_ratio = temperature_ratio^(specific_heat_ratio/(specific_heat_ratio-1));
     
     exit_temperature = chamber_temperature/temperature_ratio; 
     exit_pressure = chamber_pressure/pressure_ratio; 

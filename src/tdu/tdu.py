@@ -67,7 +67,7 @@ def main():
     M = solveMach(Ae, At, k)
     ve = sqrt(((2*k*R*Tc)/(k-1))*(1-(1/(1+((k-1)/2)*M**2))))
     tempRatio = 1+((k-1)/2)*M**2
-    presRatio = tempRatio**((k-1)/k)
+    presRatio = tempRatio**(k/(k-1))
     Te = Tc/tempRatio
     Pe = Pc/presRatio
 
