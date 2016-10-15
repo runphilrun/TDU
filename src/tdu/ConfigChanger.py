@@ -10,12 +10,19 @@ from kivy.uix.button import Button
 from kivy.config import Config
 
 import configparser
+import shutil
+import os.path
+
+configpath = "tmp.ini"
+
+if not(os.path.isfile(configpath)):
+    shutil.copy2('config.ini', 'tmp.ini')
 
 Config.set('graphics', 'width', '200')
 Config.set('graphics', 'height', '400')
 
 config = configparser.ConfigParser()
-config.read('config.ini')
+config.read(configpath)
 
 class IniForm(BoxLayout):
 
@@ -57,7 +64,7 @@ class IniForm(BoxLayout):
         config.set('Chamber', 'Tc', Tc.text)
         config.set('Chamber', 'Pc', Pc.text)
 
-        with open('config.ini', 'w') as configfile:
+        with open(configpath, 'w') as configfile:
             config.write(configfile)
             
 
@@ -65,11 +72,6 @@ class TDUApp(App):
     def build(self):
         return IniForm()
 
-    def get_k(self):
-        config = configparser.ConfigParser()
-        config.read('config.ini')
-
-        return config.get('Prop', 'k')
 
 if __name__ == '__main__':
     TDUApp().run()
