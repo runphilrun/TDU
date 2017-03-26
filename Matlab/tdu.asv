@@ -119,25 +119,25 @@ function Mach = solve_mach(A,At,k)
 end
 function loadfromfile(filein)
 %  read data from input file
-   fid  = fopen(filein,'r');
+   ini  = fopen(filein,'r');
    %%fprintf('reading data from input file %s...\n',filein);
-   header            = fscanf(fid,'%*s',[1 1]) % descriptive header (no quotes, no spaces)
-   prop_params       = fscanf(fid,'%s\t%g\t%g\t%s',[1 4]) % scan propellant parameters
-    prop_name        = prop_params(1,1) % name of propellant
-    k                = prop_params(1,2) % specific heat ratio
-    mw               = prop_params(1,3) % molecular weight
-%     mw_units
-%    
-%    g                 = fscanf(ini,'%g',[1 1]);        % body force acceleration (gravity)
-%    nodes=zeros(numnod,4);
-%    for i=1:numnod
-%     nodes(i,:)       = fscanf(ini,'%g',[1 4]);        % node	xcoord  bcflag  bcvalue
-%    end
-%    %%fprintf('\tnodes imported.\n');
-%    elems=zeros(numel,6);
-%    for i=1:numel
-%     elems(i,:)        = fscanf(ini,'%g',[1 6]);    % elem    node1   node2   dia     E   dens
-%    end
+   header            = fscanf(ini,'%s',[1 1]); % descriptive header (no quotes, no spaces)
+   prop_params       = fscanf(ini,'%s%g',[1 4]); % scan propellant parameters
+    prop_name        = prop_params(1,1); % name of propellant
+    k                = prop_params(1,2); % specific heat ratio
+    mw               = prop_params(1,3); % molecular weight
+    mw_units
+   
+   g                 = fscanf(ini,'%g',[1 1]);        % body force acceleration (gravity)
+   nodes=zeros(numnod,4);
+   for i=1:numnod
+    nodes(i,:)       = fscanf(ini,'%g',[1 4]);        % node	xcoord  bcflag  bcvalue
+   end
+   %%fprintf('\tnodes imported.\n');
+   elems=zeros(numel,6);
+   for i=1:numel
+    elems(i,:)        = fscanf(ini,'%g',[1 6]);    % elem    node1   node2   dia     E   dens
+   end
    %%fprintf('\telements imported.\n');
    fclose('all'); %close input file
    %fprintf('\tinput file closed.\n');
