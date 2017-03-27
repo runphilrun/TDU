@@ -2,6 +2,9 @@ function varargout = tdu % main function
     clear all;
     clc;
     format long
+    
+    filein = 'sample.tdu'; % input file
+    
     % universal constants
     R_0 = 8.3144598; % [J/(mol*K)] universal gas constant
     g_0 = 9.81; % [m/s^2] standard gravity
@@ -9,8 +12,34 @@ function varargout = tdu % main function
     global debug;
     debug = true;
 %   === THRUSTER PARAMETERS ===
-
+% read data from input file
+fid  = fopen(filein,'r');
+if debug;fprintf('reading data from input file (%s)...\n',filein);end;
+prop_name   = fscanf(fid,'%s',[1,1]); % descriptive header (no quotes, no spaces)
+    if debug;fprintf('\tPropellant:\t%s\n',prop_name);end;
+prop_params = fscanf(fid,'%g',[1 2]); % scan propellant parameters
+    k           = prop_params(1,1); % specific heat ratio
+    mw          = prop_params(1,2); % molecular weight
+    if debug;fprintf('\tk:\t%g\n\tmw:\t%g\n',k,mw);end;
+total_params= fscanf(fid,'%g',[1 2]); % scan total/stagnation parameters
+    T_0         = total_params(1,1); % total temperature
+    P_0         = total_params(1,2); % total pressure
+    if debug;fprintf('\tT_0:\t%g\n\tP_0:%g\n',T_0,P_0);end;
+geom        = fscanf(fid,'%g',[1 3]); % scan nozzle geometry
+    inlet_radius= geom(1,1); % radius at inlet of converging section
+    throat_radius= geom(1,2); % radius at throat
+    exit_radius = geom(1,3); % radius at exit of diverging section
+    if debug;fprintf('\tinlet radius:\t%g\n\tthroat radius:\t%g\n\texit radius:\t%g\n',inlet_radius,throat_radius,exit_radius);end;
+alpha       = fscanf(fid,'%g',[1,1]); % conical half angle
+    if debug;fprintf('\talpha:\t%g\n',alpha);end;
+fclose('all'); %close input file
+if debug;fprintf('input file closed.\n');end;
 % % MANUAL ENTRY
+mw_units = '[kg/mol]';
+temperature_units = '[K]';
+pressure_units = '[Pa]';
+length_units = '[m]';
+angle_units = '[deg]';
 % %     % gas properties of propellant
 % %     prop_name = 'Air';
 % %     k = 1.4; % 1.4 for air
@@ -30,7 +59,7 @@ function varargout = tdu % main function
 % % %     exit_radius = .00708; % radius at nozzle exit
 % % %     throat_radius = .005; % radius at nozzle throat
 % %     length_units = '[m]';
-% %     conical_half_angle = 15; % half angle of conical nozzle, 15 degrees is optimal
+% %     alpha = 15; % half angle of conical nozzle, 15 degrees is optimal
 % %     angle_units = '[deg]';
 %   ===------------===   
 
@@ -53,7 +82,7 @@ function varargout = tdu % main function
     A_e = pi*exit_radius^2; % exit area
     A_t = pi*throat_radius^2; % throat area
     area_units = '[m^2]';
-    length = (exit_radius-throat_radius)/tan(deg2rad(conical_half_angle)); % [m]
+    length = (exit_radius-throat_radius)/tan(deg2rad(alpha)); % [m]
     
     % Throat conditions
 
@@ -72,7 +101,7 @@ function varargout = tdu % main function
                'Throat radius', throat_radius, length_units;
                'Exit area',A_e,'[m^2]';
                'Throat area',A_t,'[m^2]';
-               'Half-angle',conical_half_angle, angle_units;
+               'Half-angle',alpha, angle_units;
                linedivider,'','';
                'Length',length,length_units;
                'Exit area',A_e,area_units;
@@ -117,31 +146,7 @@ function Mach = solve_mach(A,At,k)
     end
     Mach = 1/sqrt(X);
 end
-function loadfromfile(filein)
-%  read data from input file
-   fid  = fopen(filein,'r');
-   %%fprintf('reading data from input file %s...\n',filein);
-   header            = fscanf(fid,'%*s',[1 1]) % descriptive header (no quotes, no spaces)
-   prop_params       = fscanf(fid,'%s\t%g\t%g\t%s',[1 4]) % scan propellant parameters
-    prop_name        = prop_params(1,1) % name of propellant
-    k                = prop_params(1,2) % specific heat ratio
-    mw               = prop_params(1,3) % molecular weight
-%     mw_units
-%    
-%    g                 = fscanf(ini,'%g',[1 1]);        % body force acceleration (gravity)
-%    nodes=zeros(numnod,4);
-%    for i=1:numnod
-%     nodes(i,:)       = fscanf(ini,'%g',[1 4]);        % node	xcoord  bcflag  bcvalue
-%    end
-%    %%fprintf('\tnodes imported.\n');
-%    elems=zeros(numel,6);
-%    for i=1:numel
-%     elems(i,:)        = fscanf(ini,'%g',[1 6]);    % elem    node1   node2   dia     E   dens
-%    end
-   %%fprintf('\telements imported.\n');
-   fclose('all'); %close input file
-   %fprintf('\tinput file closed.\n');
-end
+
 function display(result)
     [n,~]=size(result);
     for i = 1:n 
@@ -149,4 +154,3 @@ function display(result)
     end
     fprintf('\n')
 end
-[ k mw mw_units] = 
