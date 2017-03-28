@@ -12,80 +12,66 @@ function varargout = tdu % main function
     global debug;
     debug = true;
 %   === THRUSTER PARAMETERS ===
-% read data from input file
-fid  = fopen(filein,'r');
-if debug;fprintf('reading data from input file (%s)...\n',filein);end;
-prop_name   = fscanf(fid,'%s',[1,1]); % descriptive header (no quotes, no spaces)
-    if debug;fprintf('\tPropellant:\t%s\n',prop_name);end;
-prop_params = fscanf(fid,'%g',[1 2]); % scan propellant parameters
-    k           = prop_params(1,1); % specific heat ratio
-    mw          = prop_params(1,2); % molecular weight
-    if debug;fprintf('\tk:\t%g\n\tmw:\t%g\n',k,mw);end;
-total_params= fscanf(fid,'%g',[1 2]); % scan total/stagnation parameters
-    T_0         = total_params(1,1); % total temperature
-    P_0         = total_params(1,2); % total pressure
-    if debug;fprintf('\tT_0:\t%g\n\tP_0:%g\n',T_0,P_0);end;
-geom        = fscanf(fid,'%g',[1 3]); % scan nozzle geometry
-    inlet_radius= geom(1,1); % radius at inlet of converging section
-    throat_radius= geom(1,2); % radius at throat
-    exit_radius = geom(1,3); % radius at exit of diverging section
-    if debug;fprintf('\tinlet radius:\t%g\n\tthroat radius:\t%g\n\texit radius:\t%g\n',inlet_radius,throat_radius,exit_radius);end;
-alpha       = fscanf(fid,'%g',[1,1]); % conical half angle
-    if debug;fprintf('\talpha:\t%g\n',alpha);end;
-fclose('all'); %close input file
-if debug;fprintf('input file closed.\n');end;
-% % MANUAL ENTRY
-mw_units = '[kg/mol]';
-temperature_units = '[K]';
-pressure_units = '[Pa]';
-length_units = '[m]';
-angle_units = '[deg]';
-% %     % gas properties of propellant
-% %     prop_name = 'Air';
-% %     k = 1.4; % 1.4 for air
-% %     mw = .0289645; % .0289645 for air
-% %     mw_units = '[kg/mol]';
-% %     
-% %     % chamber conditions
-% %     T_0 = 273; % stagnation temperature
-% %     temperature_units = '[K]';
-% %     P_0 = 101325; % stagnation pressure
-% %     pressure_units = '[Pa]';
-% %     
-% %     % nozzle geometry
-% %     inlet_radius = .0075; % radius at inlet of converging section
-% %     exit_radius = .00708; % radius at exit of diverging section
-% %     throat_radius = .005; % radius at throat
-% % %     exit_radius = .00708; % radius at nozzle exit
-% % %     throat_radius = .005; % radius at nozzle throat
-% %     length_units = '[m]';
-% %     alpha = 15; % half angle of conical nozzle, 15 degrees is optimal
-% %     angle_units = '[deg]';
+    % IMPORT FROM FILE
+    fid  = fopen(filein,'r');
+    if debug;fprintf('reading data from input file (%s)...\n',filein);end
+    prop_name   = fscanf(fid,'%s',[1,1]); % descriptive header (no quotes, no spaces)
+        if debug;fprintf('\tPropellant:\t\t%8s\n',prop_name);end
+    prop_params = fscanf(fid,'%g',[1 2]); % scan propellant parameters
+        k           = prop_params(1,1); % specific heat ratio
+        mw          = prop_params(1,2); % molecular weight
+        if debug;fprintf('\tk:\t\t%16g\n\tmw:\t\t%16g\n',k,mw);end
+    total_params= fscanf(fid,'%g',[1 2]); % scan total/stagnation parameters
+        T_0         = total_params(1,1); % total temperature
+        P_0         = total_params(1,2); % total pressure
+        if debug;fprintf('\tT_0:\t%16g\n\tP_0:\t%16g\n',T_0,P_0);end
+    geom_size     = fscanf(fid,'%g',[1 1]); % number of geometry nodes
+    xcoord = zeros(geom_size,1); radius = zeros(geom_size,1);
+        for i=1:geom_size
+            geom   = fscanf(fid,'%g',[1 2]);
+            xcoord(i)   = geom(1,1); % x coordinate of geometry node
+            radius(i)   = geom(1,2); % radius at xcoord
+        end
+        if debug
+            fprintf('\tinlet radius:\t%8f\n\tthroat radius:\t%8f\n\texit radius:\t%8f\n',radius(1),min(radius),radius(end));
+            fprintf('\tlength:\t%16f\n\tgeometry nodes:\t%8i\n',xcoord(end),geom_size);
+        end
+    fclose('all'); %close input file
+    if debug;fprintf('input file closed.\n');end
+    % MANUAL ENTRY
+    mw_units = '[kg/mol]';
+    temperature_units = '[K]';
+    pressure_units = '[Pa]';
+    length_units = '[m]';
+    angle_units = '[deg]';
 %   ===------------===   
-
-%  Math (the fun part)
 
 %           NOZZLE NOMENCLATURE
 %   ********************************
 %
 %              /-
-%             /
-%     ===\---/          c = chamber
-%     (c) (t)  (e)      t = throat
-%     ===/---\          e = exit
+%             /         0 = total parameters
+%     ===\---/          1 = chamber
+%     (1) (2)  (3)      2 = throat
+%     ===/---\          3 = exit
 %             \
 %              \-
 %   ********************************
+
+% % ASSUMPTIONS
+% - Isentropic flow
+% - Initial temperature and pressure are total parameters
 
     R = R_0/mw; % gas constant
     R_units = '[J/kg K]';
     A_e = pi*exit_radius^2; % exit area
     A_t = pi*throat_radius^2; % throat area
     area_units = '[m^2]';
-    length = (exit_radius-throat_radius)/tan(deg2rad(alpha)); % [m]
     
-    % Throat conditions
-
+    for index = 2:geom_size
+        
+    end
+    
     
     % format & display outputs
     linedivider='------------';
@@ -126,13 +112,13 @@ angle_units = '[deg]';
     display(result);
 end
 
-function Mach = solve_mach(A,At,k)
+function Mach = arearatio2mach(A,Astar,k)
 %   solve Mach number from area ratio by Newton-Raphson Method. (assume
 %   supersonic)
 %   https://www.grc.nasa.gov/WWW/winddocs/utilities/b4wind_guide/mach.html
     P = 2/(k+1);
     Q = 1-P;
-    R = (A/At).^((2*Q)/P);
+    R = (A/Astar).^((2*Q)/P);
     a = Q.^(1/P);
     r = (R-1)/(2*a);
     X = 1/((1+r)+sqrt(r*(r+2)));  % initial guess
