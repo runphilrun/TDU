@@ -115,15 +115,15 @@ function varargout = tdu % main function
         figure
         numplots=4;plotcounter=1;
         subplot(numplots,1,plotcounter)
-        plot(xcoord,radius);ylabel('radius');plotcounter=plotcounter+1;axis([0 radius(end) 0 xcoord(end)]);
+        plot(xcoord,radius);ylabel('radius');plotcounter=plotcounter+1;axis([0 xcoord(end) 0 inf]);
 %         subplot(numplots,1,plotcounter)
 %         semilogy(xcoord,A./A_t,xcoord(mark),A(mark)./A_t,'x');ylabel('A/A_t');plotcounter=plotcounter+1;
         subplot(numplots,1,plotcounter)
-        plot(xcoord,M_sub,xcoord,M_sup);ylabel('M');plotcounter=plotcounter+1;
+        plot(xcoord,M_sub,xcoord,M_sup);ylabel('M');plotcounter=plotcounter+1;axis([0 xcoord(end) 0 inf]);
         subplot(numplots,1,plotcounter)
-        plot(xcoord,T_sub,xcoord,T_sup);ylabel('T');plotcounter=plotcounter+1;
+        plot(xcoord,T_sub,xcoord,T_sup);ylabel('T');plotcounter=plotcounter+1;axis([0 xcoord(end) 0 inf]);
         subplot(numplots,1,plotcounter)
-        plot(xcoord,P_sub/10^3,xcoord,P_sup/10^3);ylabel('P');plotcounter=plotcounter+1;
+        plot(xcoord,P_sub/10^3,xcoord,P_sup/10^3);ylabel('P');plotcounter=plotcounter+1;axis([0 xcoord(end) 0 inf]);
 %         figure
 %         semilogy(M(1:find(A==A_t)),A(1:find(A==A_t))./A_t,M(find(A==A_t)+1:end),A(find(A==A_t)+1:end)./A_t,'--');xlabel('M');ylabel('A/A_t');
 %         figure
