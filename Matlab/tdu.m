@@ -3,7 +3,7 @@ function varargout = tdu % main function
     close all
     format long
     
-    filein = 'sample.tdu'; % input file
+    filein = 'msd-050.tdu'; % input file
     
     % universal constants
     R_0 = 8.3144598; % [J/(mol*K)] universal gas constant
@@ -119,11 +119,14 @@ function varargout = tdu % main function
 %         subplot(numplots,1,plotcounter)
 %         semilogy(xcoord,A./A_t,xcoord(mark),A(mark)./A_t,'x');ylabel('A/A_t');plotcounter=plotcounter+1;
         subplot(numplots,1,plotcounter)
-        plot(xcoord,M_sub,xcoord,M_sup);ylabel('M');plotcounter=plotcounter+1;axis([0 xcoord(end) 0 inf]);
+%         plot(xcoord,M_sub,xcoord,M_sup);ylabel('M');plotcounter=plotcounter+1;axis([0 xcoord(end) 0 inf]);
+        semilogy(xcoord,M_sub,xcoord,M_sup);ylabel('M');plotcounter=plotcounter+1;axis([0 xcoord(end) 0 inf]);
         subplot(numplots,1,plotcounter)
         plot(xcoord,T_sub,xcoord,T_sup);ylabel('T');plotcounter=plotcounter+1;axis([0 xcoord(end) 0 inf]);
+%         semilogy(xcoord,T_sub,xcoord,T_sup);ylabel('T');plotcounter=plotcounter+1;axis([0 xcoord(end) 0 inf]);
         subplot(numplots,1,plotcounter)
         plot(xcoord,P_sub/10^3,xcoord,P_sup/10^3);ylabel('P');plotcounter=plotcounter+1;axis([0 xcoord(end) 0 inf]);
+%         semilogy(xcoord,P_sub/10^3,xcoord,P_sup/10^3);ylabel('P');plotcounter=plotcounter+1;axis([0 xcoord(end) 0 inf]);
 %         figure
 %         semilogy(M(1:find(A==A_t)),A(1:find(A==A_t))./A_t,M(find(A==A_t)+1:end),A(find(A==A_t)+1:end)./A_t,'--');xlabel('M');ylabel('A/A_t');
 %         figure
@@ -167,6 +170,7 @@ function varargout = tdu % main function
 %                'v/at',exit_velocity/throat_velocity,unitless;
                }; 
     display(result);
+    
 end
 
 function Mach = arearatio2mach_sub(A,A_t,k)
@@ -210,9 +214,12 @@ function Mach = arearatio2mach_sup(A,A_t,k)
     Mach = 1/sqrt(X);
 end
 function display(result)
+    global debug
+    if debug;fprintf('displaying results...\n');end;
     [n,~]=size(result);
     for i = 1:n 
         fprintf('\n%24s\t%15.8f\t%s',result{i,:});
     end
     fprintf('\n')
+    if debug;fprintf('done.\n');end;
 end
