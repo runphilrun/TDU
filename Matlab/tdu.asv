@@ -194,7 +194,7 @@ figure
     M=linspace(0.1,4);
     A_theoretical=(1./M).*(g1*(1+g2*M.^2)).^g3;
     A_trunc = round(A_theoretical.*1000)./1000;
-    semilogx(M,A_theoretical,M(find(A_trunc==1)),1,'o','linewidth',2)
+    semilogx(M,A_theoretical,M(find(A_trunc==1)),,'o','linewidth',2)
     grid on
     xlabel('Mach Number')
     ylabel('Area Ratio')
