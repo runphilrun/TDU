@@ -88,7 +88,7 @@ choked=false;
 if debug;fprintf('Computing flow conditions along x-axis...\n');end
 for x=2:length(xcoord)
         M_sub(x)=arearatio2mach_sub(A(x),A_t,k);
-        if x >=A_t_idx;M_sup(x)=arearatio2mach_sup(A(x),A_t,k);end;
+        if x >=A_t_idx;M_sup(x)=arearatio2mach_sup(A(x),A_t,k);end
         if M(x)<1
             M(x)=M_sub(x);
         elseif M(x)==1
@@ -144,7 +144,7 @@ figure
     plot(xcoord,T_sub,xcoord(A_t_idx:end),T_sup(A_t_idx:end));
     ylabel('T (K)');axis([0 xcoord(end) 0 inf]);
 figure
-    plot(xcoord,P,'k',xcoord,P_sub,'--',xcoord(A_t_idx:end),P_sup(A_t_idx:end),'--',xcoord,ones(length(xcoord))*P_b,'k--');
+    semilogy(xcoord,P,'k',xcoord,P_sub,'--',xcoord(A_t_idx:end),P_sup(A_t_idx:end),'--',xcoord,ones(length(xcoord))*P_b,'k--');
     legend('P','P_M_<_1','P_M_>_1','P_a_m_b');ylabel('P (Pa)');axis([0 xcoord(end) 0 inf]);
 end
 %     % format & display outputs
