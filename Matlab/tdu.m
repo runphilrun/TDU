@@ -189,6 +189,7 @@ result =  {'Propellant','',prop_name;
            }; 
 display(result);
 if debug
+    fprintf('plotting area ratio...');
     figure
         g=1.4;
         g1=2/(g+1);
@@ -203,10 +204,11 @@ if debug
         A_exit = ones(length(M_span))*A(end);
         A_throat = ones(length(M_span))*A_t;
         loglog(M_span,A_theoretical,M_span,A_inlet,'--',M_span,A_exit,'--',M_span,A_throat,'--',M_sub,A,'k',M_sup,A,'k')
-        legend('theoretical area from F_i_s(M)','inlet area','exit area','throat area','area as function of M found numerically',location,'southeastoutside')
+        legend('theoretical area from F_i_s(M)','inlet area','exit area','throat area','area as function of M found numerically','location','southeastoutside')
         grid on
         xlabel('Mach')
         ylabel('Area (m^2)')
+    fprintf('done');
 end
 function Mach = arearatio2mach_sub(A,A_t,k)
 %   solve Mach number from area ratio by Newton-Raphson Method. (assume
