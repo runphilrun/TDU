@@ -204,7 +204,7 @@ if debug
         A_exit = ones(length(M_span))*A(end);
         A_throat = ones(length(M_span))*A_t;
         loglog(M_span,A_theoretical,M_span,A_inlet,'--',M_span,A_exit,'--',M_span,A_throat,'--',M_sub,A,'k',M_sup,A,'k')
-        legend('theoretical area from F_i_s(M)','inlet area','exit area','throat area','area as function of M found numerically','location','southeastoutside')
+        legend('theoretical area from F_i_s(M)','inlet area','exit area','throat area','area as function of M found numerically','location','eastoutside')
         grid on
         xlabel('Mach')
         ylabel('Area (m^2)')
