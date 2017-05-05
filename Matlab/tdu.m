@@ -195,7 +195,7 @@ if debug
         g1=2/(g+1);
         g2=(g-1)/2;
         g3=0.5*(g+1)/(g-1);
-        M_span=.0015:.001:7.5;
+        M_span=.0015:.01:7.5;
         Aratio =((1./M_span).*(g1*(1+g2*M_span.^2)).^g3);
         Aratio_sonic =((1./1).*(g1*(1+g2*1.^2)).^g3);
         A_star = A_t/Aratio_sonic; 
