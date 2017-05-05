@@ -60,8 +60,11 @@ angle_units = '[deg]';
 %   ********************************
 
 % % ASSUMPTIONS
-% - Isentropic flow
+% - Uniform flow across nozzle cross sections
+% - Isentropic flow (except when normal shock occurs)
 % - Initial temperature and pressure are total parameters
+% - Inlet flow is unmoving
+% 
 
 R = R_0/mw; % gas constant
 R_units = '[J/kg K]';
@@ -185,19 +188,26 @@ result =  {'Propellant','',prop_name;
 %                'v/at',exit_velocity/throat_velocity,unitless;
            }; 
 display(result);
-figure
-    g=1.4;
-    g1=2/(g+1);
-    g2=(g-1)/2;
-    g3=0.5*(g+1)/(g-1);
-    M=0.1:0.1:4;
-    M=linspace(0.1,4);
-    A_theoretical=(1./M).*(g1*(1+g2*M.^2)).^g3;
-    A_trunc = round(A_theoretical.*1000)./1000;
-    semilogx(M,A_theoretical,M(find(A_trunc==1)),1,'o','linewidth',2)
-    grid on
-    xlabel('Mach Number')
-    ylabel('Area Ratio')
+if debug
+    figure
+        g=1.4;
+        g1=2/(g+1);
+        g2=(g-1)/2;
+        g3=0.5*(g+1)/(g-1);
+        M_span=.0015:.001:7.5;
+        Aratio =((1./M_span).*(g1*(1+g2*M_span.^2)).^g3);
+        Aratio_sonic =((1./1).*(g1*(1+g2*1.^2)).^g3);
+        A_star = A_t/Aratio_sonic; 
+        A_theoretical=((1./M_span).*(g1*(1+g2*M_span.^2)).^g3).*A_star;
+        A_inlet = ones(length(M_span))*A(1);
+        A_exit = ones(length(M_span))*A(end);
+        A_throat = ones(length(M_span))*A_t;
+        loglog(M_span,A_theoretical,M_span,A_inlet,'--',M_span,A_exit,'--',M_span,A_throat,'--',M_sub,A,'k',M_sup,A,'k')
+        legend('theoretical area from F_i_s(M)','inlet area','exit area','throat area','area as function of M found numerically',location,'southeastoutside')
+        grid on
+        xlabel('Mach')
+        ylabel('Area (m^2)')
+end
 function Mach = arearatio2mach_sub(A,A_t,k)
 %   solve Mach number from area ratio by Newton-Raphson Method. (assume
 %   subsonic)

@@ -60,8 +60,11 @@ angle_units = '[deg]';
 %   ********************************
 
 % % ASSUMPTIONS
-% - Isentropic flow
+% - Uniform flow across nozzle cross sections
+% - Isentropic flow (except when normal shock occurs)
 % - Initial temperature and pressure are total parameters
+% - Inlet flow is unmoving
+% 
 
 R = R_0/mw; % gas constant
 R_units = '[J/kg K]';
@@ -88,7 +91,7 @@ choked=false;
 if debug;fprintf('Computing flow conditions along x-axis...\n');end
 for x=2:length(xcoord)
         M_sub(x)=arearatio2mach_sub(A(x),A_t,k);
-        if x >=A_t_idx;M_sup(x)=arearatio2mach_sup(A(x),A_t,k);end;
+        if x >=A_t_idx;M_sup(x)=arearatio2mach_sup(A(x),A_t,k);end
         if M(x)<1
             M(x)=M_sub(x);
         elseif M(x)==1
@@ -144,7 +147,7 @@ figure
     plot(xcoord,T_sub,xcoord(A_t_idx:end),T_sup(A_t_idx:end));
     ylabel('T (K)');axis([0 xcoord(end) 0 inf]);
 figure
-    plot(xcoord,P,'k',xcoord,P_sub,'--',xcoord(A_t_idx:end),P_sup(A_t_idx:end),'--',xcoord,ones(length(xcoord))*P_b,'k--');
+    semilogy(xcoord,P,'k',xcoord,P_sub,'--',xcoord(A_t_idx:end),P_sup(A_t_idx:end),'--',xcoord,ones(length(xcoord))*P_b,'k--');
     legend('P','P_M_<_1','P_M_>_1','P_a_m_b');ylabel('P (Pa)');axis([0 xcoord(end) 0 inf]);
 end
 %     % format & display outputs
@@ -185,19 +188,25 @@ result =  {'Propellant','',prop_name;
 %                'v/at',exit_velocity/throat_velocity,unitless;
            }; 
 display(result);
-figure
-    g=1.4;
-    g1=2/(g+1);
-    g2=(g-1)/2;
-    g3=0.5*(g+1)/(g-1);
-    M=0.1:0.1:4;
-    M=linspace(0.1,4);
-    A_theoretical=(1./M).*(g1*(1+g2*M.^2)).^g3;
-    A_trunc = round(A_theoretical.*1000)./1000;
-    semilogx(M,A_theoretical,M(find(A_trunc==1)),,'o','linewidth',2)
-    grid on
-    xlabel('Mach Number')
-    ylabel('Area Ratio')
+if debug
+    figure
+        g=1.4;
+        g1=2/(g+1);
+        g2=(g-1)/2;
+        g3=0.5*(g+1)/(g-1);
+        M_span=.1:.01:12;
+        Aratio =((1./M_span).*(g1*(1+g2*M_span.^2)).^g3);
+        Aratio_sonic =((1./1).*(g1*(1+g2*1.^2)).^g3);
+        A_star = A/Aratio_sonic; 
+        A_theoretical=((1./M_span).*(g1*(1+g2*M_span.^2)).^g3).*A_star;
+        A_inlet = ones(length(M_span))*A(1)./A_t;
+        A_exit = ones(length(M_span))*A(end)./A_t;
+        A_throat = ones(length(M_span))*A_t;
+        loglog(M_span,A_theoretical,M_span,A_inlet,'--',M_span,A_exit,'--',M_span,A_throat,'--',M_sub,A,'k',M_sup,A,'k')
+        grid on
+        xlabel('Mach Number')
+        ylabel('Area')
+end
 function Mach = arearatio2mach_sub(A,A_t,k)
 %   solve Mach number from area ratio by Newton-Raphson Method. (assume
 %   subsonic)
