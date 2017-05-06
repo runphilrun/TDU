@@ -210,45 +210,64 @@ if debug
         ylabel('Area (m^2)')
     fprintf('done');
 end
+
 function Mach = arearatio2mach_sub(A,A_t,k)
-%   solve Mach number from area ratio by Newton-Raphson Method. (assume
-%   subsonic)
-%   https://www.grc.nasa.gov/WWW/winddocs/utilities/b4wind_guide/mach.html
-    P = 2/(k+1);
-    Q = 1-P;
-    R = (A/A_t).^2;
-    a = P.^(1/Q);
-    r = (R-1)/(2*a);
-    X = 1/((1+r)+sqrt(r*(r+2)));  % initial guess    
-    diff = 1;  % initalize termination criteria
-    while abs(diff) > .00001
-        F = (P*X+Q).^(1/P)-R*X;
-        dF = (P*X+Q).^((1/P)-1)-R;
-        Xnew = X - F/dF;
-        diff = Xnew - X;
-        X = Xnew;
-    end
-    Mach = sqrt(X);
+% %   solve Mach number from area ratio by Newton-Raphson Method. (assume
+% %   subsonic)
+% %   https://www.grc.nasa.gov/WWW/winddocs/utilities/b4wind_guide/mach.html
+%     P = 2/(k+1);
+%     Q = 1-P;
+%     R = (A/A_t).^2;
+%     a = P.^(1/Q);
+%     r = (R-1)/(2*a);
+%     X = 1/((1+r)+sqrt(r*(r+2)));  % initial guess    
+%     diff = 1;  % initalize termination criteria
+%     while abs(diff) > .00001
+%         F = (P*X+Q).^(1/P)-R*X;
+%         dF = (P*X+Q).^((1/P)-1)-R;
+%         Xnew = X - F/dF;
+%         diff = Xnew - X;
+%         X = Xnew;
+%     end
+%     Mach = sqrt(X);
+M=.001:.001:1;
+g=k;
+g1=2/(g+1);
+g2=(g-1)/2;
+g3=0.5*(g+1)/(g-1);
+arearatio=1./M.*(g1*(1+g2*M.^2)).^g3;
+diff=abs(arearatio-A/A_t);
+[res,i]=min(diff);
+Mach=M(i);
 end
 function Mach = arearatio2mach_sup(A,A_t,k)
-%   solve Mach number from area ratio by Newton-Raphson Method. (assume
-%   supersonic)
-%   https://www.grc.nasa.gov/WWW/winddocs/utilities/b4wind_guide/mach.html
-    P = 2/(k+1);
-    Q = 1-P;
-    R = (A/A_t).^((2*Q)/P);
-    a = Q.^(1/P);
-    r = (R-1)/(2*a);
-    X = 1/((1+r)+sqrt(r*(r+2)));  % initial guess
-    diff = 1;  % initalize termination criteria
-    while abs(diff) > .00001
-        F = (P*X+Q).^(1/P)-R*X;
-        dF = (P*X+Q).^((1/P)-1)-R;
-        Xnew = X - F/dF;
-        diff = Xnew - X;
-        X = Xnew;
-    end
-    Mach = 1/sqrt(X);
+% %   solve Mach number from area ratio by Newton-Raphson Method. (assume
+% %   supersonic)
+% %   https://www.grc.nasa.gov/WWW/winddocs/utilities/b4wind_guide/mach.html
+%     P = 2/(k+1);
+%     Q = 1-P;
+%     R = (A/A_t).^((2*Q)/P);
+%     a = Q.^(1/P);
+%     r = (R-1)/(2*a);
+%     X = 1/((1+r)+sqrt(r*(r+2)));  % initial guess
+%     diff = 1;  % initalize termination criteria
+%     while abs(diff) > .00001
+%         F = (P*X+Q).^(1/P)-R*X;
+%         dF = (P*X+Q).^((1/P)-1)-R;
+%         Xnew = X - F/dF;
+%         diff = Xnew - X;
+%         X = Xnew;
+%     end
+%     Mach = 1/sqrt(X);
+    M=1:.01:10;
+    g=k;
+    g1=2/(g+1);
+    g2=(g-1)/2;
+    g3=0.5*(g+1)/(g-1);
+    arearatio=1./M.*(g1*(1+g2*M.^2)).^g3;
+    diff=abs(arearatio-A/A_t);
+    [res,i]=min(diff);
+    Mach=M(i);
 end
 function display(result)
     global debug
