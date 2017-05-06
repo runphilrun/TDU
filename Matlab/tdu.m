@@ -83,22 +83,23 @@ M_idx=linspace(.1,4,length(xcoord));
 k1=(2/(k+1));
 k2=((k-1)/2);
 k3=(.5*(k+1)/(k-1));
-area_ratio=(1./M_idx).*((2/(k+1))*(1+((k-1)/2)*M_idx.^2)).^(.5*(k+1)/(k-1));
+% area_ratio=(1./M_idx).*((2/(k+1))*(1+((k-1)/2)*M_idx.^2)).^(.5*(k+1)/(k-1));
 
 M=zeros(length(xcoord),1);M_sub=M;M_sup=M;temp_ratio=M;T=M;pres_ratio=M;P=M;
-M(1)=1;
+M(1)=0;
 choked=false;
+shocks=false;
 if debug;fprintf('Computing flow conditions along x-axis...\n');end
 for x=2:length(xcoord)
         M_sub(x)=arearatio2mach_sub(A(x),A_t,k);
-        if x >=A_t_idx;M_sup(x)=arearatio2mach_sup(A(x),A_t,k);end
-        if M(x)<1
+        M_sup(x)=arearatio2mach_sup(A(x),A_t,k);
+        if M(x-1)<1
             M(x)=M_sub(x);
-        elseif M(x)==1
+        elseif M(x-1)==1
             choked=true;
             if debug;fprintf('\tFlow is choked at A = %f\n',A(x));end
-            M(x)=M_sub(x);
-        elseif M(x)>1
+            M(x)=M_sup(x);
+        elseif M(x-1)>1
             M(x)=M_sup(x);
         end
         temp_ratio(x)=(1+((k-1)/2)*M(x)^2);
@@ -114,41 +115,43 @@ for x=2:length(xcoord)
         T_sup(x)=T_0/temp_ratio_sup(x);
         pres_ratio_sup(x)=temp_ratio_sup(x)^(k/(k-1));
         P_sup(x)=P_0/pres_ratio_sup(x);
-        
 end
+if debug&&not(choked);fprintf('\tFlow is NOT choked.\n');end
 if debug;fprintf('done.\n');end
-if debug
-    figure
-    numplots=4;plotcounter=1;
-    subplot(numplots,1,plotcounter)
-    plot(xcoord,radius);ylabel('radius');plotcounter=plotcounter+1;axis([0 xcoord(end) 0 inf]);
+figure
+numplots=4;plotcounter=1;
+subplot(numplots,1,plotcounter)
+plot(xcoord,radius);ylabel('radius');plotcounter=plotcounter+1;axis([0 xcoord(end) 0 inf]);
 %         subplot(numplots,1,plotcounter)
 %         semilogy(xcoord,A./A_t,xcoord(mark),A(mark)./A_t,'x');ylabel('A/A_t');plotcounter=plotcounter+1;
-    subplot(numplots,1,plotcounter)
+subplot(numplots,1,plotcounter)
 %         plot(xcoord,M_sub,xcoord,M_sup);ylabel('M');plotcounter=plotcounter+1;axis([0 xcoord(end) 0 inf]);
-    semilogy(xcoord,M,'k',xcoord,M_sub,'--',xcoord(A_t_idx:end),M_sup(A_t_idx:end),'--');legend('M','M<1','M>1');ylabel('M');plotcounter=plotcounter+1;axis([0 xcoord(end) 0 inf]);
-    subplot(numplots,1,plotcounter)
-    plot(xcoord,T_sub,xcoord(A_t_idx:end),T_sup(A_t_idx:end));ylabel('T (K)');plotcounter=plotcounter+1;axis([0 xcoord(end) 0 inf]);
+semilogy(xcoord,M,'k',xcoord,M_sub,xcoord(A_t_idx:end),M_sup(A_t_idx:end));
+    legend('M','M<1','M>1');ylabel('M');plotcounter=plotcounter+1;axis([0 xcoord(end) 0 inf]);
+subplot(numplots,1,plotcounter)
+plot(xcoord,T,'k',xcoord,T_sub,xcoord(A_t_idx:end),T_sup(A_t_idx:end));
+    legend('T','T_M_<_1','T_M_>_1');ylabel('T (K)');plotcounter=plotcounter+1;axis([0 xcoord(end) 0 inf]);
 %         semilogy(xcoord,T_sub,xcoord,T_sup);ylabel('T');plotcounter=plotcounter+1;axis([0 xcoord(end) 0 inf]);
-    subplot(numplots,1,plotcounter)
-    plot(xcoord,P,'k',xcoord,P_sub,'--',xcoord(A_t_idx:end),P_sup(A_t_idx:end),'--',xcoord,ones(length(xcoord))*P_b,'k--');legend('P','P_M_<_1','P_M_>_1','P_a_m_b');ylabel('P (Pa)');plotcounter=plotcounter+1;axis([0 xcoord(end) 0 inf]);
+subplot(numplots,1,plotcounter)
+plot(xcoord,P,'k',xcoord,P_sub,xcoord(A_t_idx:end),P_sup(A_t_idx:end));
+    legend('P','P_M_<_1','P_M_>_1');ylabel('P (Pa)');plotcounter=plotcounter+1;axis([0 xcoord(end) 0 inf]);
 %         semilogy(xcoord,P_sub/10^3,xcoord,P_sup/10^3);ylabel('P');plotcounter=plotcounter+1;axis([0 xcoord(end) 0 inf]);
 %         figure
 %         semilogy(M(1:find(A==A_t)),A(1:find(A==A_t))./A_t,M(find(A==A_t)+1:end),A(find(A==A_t)+1:end)./A_t,'--');xlabel('M');ylabel('A/A_t');
 %         figure
 %         semilogy(M_idx,area_ratio,M,A./A_t,'--')
-
-figure
-    plot(xcoord,radius);ylabel('radius');axis([0 xcoord(end) 0 inf]);
-figure
-    semilogy(xcoord,M,'k',xcoord,M_sub,'--',xcoord(A_t_idx:end),M_sup(A_t_idx:end),'--');
-    legend('M','M<1','M>1');ylabel('M');axis([0 xcoord(end) 0 inf]);
-figure
-    plot(xcoord,T_sub,xcoord(A_t_idx:end),T_sup(A_t_idx:end));
-    ylabel('T (K)');axis([0 xcoord(end) 0 inf]);
-figure
-    semilogy(xcoord,P,'k',xcoord,P_sub,'--',xcoord(A_t_idx:end),P_sup(A_t_idx:end),'--',xcoord,ones(length(xcoord))*P_b,'k--');
-    legend('P','P_M_<_1','P_M_>_1','P_a_m_b');ylabel('P (Pa)');axis([0 xcoord(end) 0 inf]);
+if debug
+    figure
+        plot(xcoord,radius);ylabel('radius');axis([0 xcoord(end) 0 inf]);
+    figure
+        semilogy(xcoord,M,'k',xcoord,M_sub,xcoord(A_t_idx:end),M_sup(A_t_idx:end));
+        legend('M','M<1','M>1');ylabel('M');axis([0 xcoord(end) 0 inf]);
+    figure
+        plot(xcoord,T,'k',xcoord,T_sub,xcoord(A_t_idx:end),T_sup(A_t_idx:end));
+        legend('T','T_M_<_1','T_M_>_1');ylabel('T (K)');axis([0 xcoord(end) 0 inf]);
+    figure
+        semilogy(xcoord,P,'k',xcoord,P_sub,xcoord(A_t_idx:end),P_sup(A_t_idx:end),xcoord,ones(length(xcoord))*P_b,'k--');
+        legend('P','P_M_<_1','P_M_>_1','P_a_m_b');ylabel('P (Pa)');axis([0 xcoord(end) 0 inf]);
 end
 %     % format & display outputs
 linedivider='------------';
@@ -208,7 +211,7 @@ if debug
         grid on
         xlabel('Mach')
         ylabel('Area (m^2)')
-    fprintf('done');
+    fprintf('done.\n');
 end
 
 function Mach = arearatio2mach_sub(A,A_t,k)
@@ -230,7 +233,7 @@ function Mach = arearatio2mach_sub(A,A_t,k)
 %         X = Xnew;
 %     end
 %     Mach = sqrt(X);
-M=.001:.001:1;
+M=.001:.0005:1;
 g=k;
 g1=2/(g+1);
 g2=(g-1)/2;
@@ -259,7 +262,7 @@ function Mach = arearatio2mach_sup(A,A_t,k)
 %         X = Xnew;
 %     end
 %     Mach = 1/sqrt(X);
-    M=1:.01:10;
+    M=1:.005:12;
     g=k;
     g1=2/(g+1);
     g2=(g-1)/2;

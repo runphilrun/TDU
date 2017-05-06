@@ -7,4 +7,4 @@ dist/
 .doctrees/
 *.egg-info/
 __pycache__/
-.asv/
+*.asv/
