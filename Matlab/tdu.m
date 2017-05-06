@@ -85,11 +85,27 @@ k2=((k-1)/2);
 k3=(.5*(k+1)/(k-1));
 % area_ratio=(1./M_idx).*((2/(k+1))*(1+((k-1)/2)*M_idx.^2)).^(.5*(k+1)/(k-1));
 
+if debug;fprintf('Checking for normal shocks...\n');end
+M_sub=arearatio2mach_sub(A(end),A_t,k);
+M_sup=arearatio2mach_sup(A(end),A_t,k);
+pres_ratio_sub=(1+((k-1)/2)*M_sub^2)^(k/(k-1));
+pres_ratio_sup=(1+((k-1)/2)*M_sup^2)^(k/(k-1));
+Pe1=P_0/pres_ratio_sub; 
+Pe2=P_0/pres_ratio_sup;
+if P_b >= Pe1
+    if debug;fprintf('\tAlways subsonic.\n');end
+elseif P_b < Pe1 && P_b > Pe2
+    if debug;fprintf('\tNormal shock exists.\n');end
+elseif P_b == Pe2
+    if debug;fprintf('\tIsentropically supersonic through entire nozzle.\n');end
+else
+    if debug;fprintf('\tERROR!\n');end
+end
+
+if debug;fprintf('Computing flow conditions along x-axis...\n');end
 M=zeros(length(xcoord),1);M_sub=M;M_sup=M;temp_ratio=M;T=M;pres_ratio=M;P=M;
 M(1)=0;
 choked=false;
-shocks=false;
-if debug;fprintf('Computing flow conditions along x-axis...\n');end
 for x=2:length(xcoord)
         M_sub(x)=arearatio2mach_sub(A(x),A_t,k);
         M_sup(x)=arearatio2mach_sup(A(x),A_t,k);
