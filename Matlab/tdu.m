@@ -45,6 +45,7 @@ temperature_units = '[K]';
 pressure_units = '[Pa]';
 length_units = '[m]';
 angle_units = '[deg]';
+mdot_units = '[kg/s]';
 %   ===------------===   
 
 %           NOZZLE NOMENCLATURE
@@ -96,6 +97,9 @@ if P_b >= Pe1
     if debug;fprintf('\tAlways subsonic.\n');end
 elseif P_b < Pe1 && P_b > Pe2
     if debug;fprintf('\tNormal shock exists.\n');end
+    [ashock, Mminus]=ShockPosition2(A(end),A_t,k,P_0,P_b);
+%     xshock=A(find(A==round(ashock*1000)/1000))
+%     xshock2=A(find(M==Mminus))
 elseif P_b == Pe2
     if debug;fprintf('\tIsentropically supersonic through entire nozzle.\n');end
 else
@@ -121,8 +125,8 @@ for x=2:length(xcoord)
         temp_ratio(x)=(1+((k-1)/2)*M(x)^2);
         T(x)=T_0/temp_ratio(x);
         pres_ratio(x)=temp_ratio(x)^(k/(k-1));
-        P(x)=P_0/pres_ratio(x);     
-
+        P(x)=P_0/pres_ratio(x); 
+        
         temp_ratio_sub(x)=(1+((k-1)/2)*M_sub(x)^2);
         T_sub(x)=T_0/temp_ratio_sub(x);
         pres_ratio_sub(x)=temp_ratio_sub(x)^(k/(k-1));
@@ -132,6 +136,8 @@ for x=2:length(xcoord)
         pres_ratio_sup(x)=temp_ratio_sup(x)^(k/(k-1));
         P_sup(x)=P_0/pres_ratio_sup(x);
 end
+thrust = mdot*M(end)*sqrt(k*R*T(end))-(P(end)-P_b)*A(end);
+force_units='[N]';
 if debug&&not(choked);fprintf('\tFlow is NOT choked.\n');end
 if debug;fprintf('done.\n');end
 figure
@@ -191,13 +197,13 @@ result =  {'Propellant','',prop_name;
            linedivider,'','';
            'Throat temperature',T(A_t_idx),temperature_units;
            'Throat pressure',P(A_t_idx),pressure_units;
-%                'Mass flow rate',mass_flowrate,mass_flowrate_units;
+           'Mass flow rate',mdot,mdot_units;
            linedivider,'','';
            'Exit temperature',T(end),temperature_units;
            'Exit pressure',P(end),pressure_units;
            linedivider,'','';
 %                'Exhaust velocity',exit_velocity,velocity_units;
-%                'Thrust',thrust,force_units;
+           'Thrust',thrust,force_units;
 %                'Specific impulse',specific_impulse,isp_units;
            linedivider,'','';
            'Exit Mach',M(end),unitless;
@@ -288,12 +294,58 @@ function Mach = arearatio2mach_sup(A,A_t,k)
     [res,i]=min(diff);
     Mach=M(i);
 end
+function [shockArea,Mminus]=ShockPosition2(Ae,At,g,P0,Pe)
+global debug
+% Ae=3;       %exit area
+% At=1;       %Throat area
+%Me=0.4      %Exit Mach
+% P0=1;       %Total P at the inlet
+% Pe=0.6;     %Static P at exit
+% g=1.4       %isentropic constant
+g1=(g-1)/2;
+g2=2/(g+1);
+g3=0.5*(g+1)/(g-1);
+
+FUN=@(M) 1+g1*M.^2;
+FA=@(M) (1./M).*(g2*FUN(M)).^g3;  %isentropic Area/Areat
+MSHOCK=@(M) FUN(M)./(g*M.^2-g1);  %shock for M
+Pis=@(M) FUN(M).^(g/g-1);
+PSHOCK=@(M) 1+2*g/(g+1)*(M.^2-1);
+
+%Arrays of shock areas satisfying upstream and downstream conditions
+MM=1:0.01:10;
+MMPLUS=MSHOCK(MM);
+ASH1=At*FA(MM);
+
+P0SHOCK=(PSHOCK(MM).*Pis(MMPLUS))./Pis(MM);
+P02=P0*P0SHOCK;
+Me=2/(g-1)*((P02/Pe).^((g-1)/g)-1); Me=sqrt(Me);
+ASH2=Ae*FA(Me)./FA(MMPLUS);
+if debug
+    figure
+    plot(MM,ASH1,'--r','LineWidth',3)
+    hold on
+    plot(MM,ASH2,'--g','LineWidth',3)
+    grid on
+    xlabel('Mach Number')
+    ylabel('A - Shock Area')
+    title('Shock Cross Section Area')
+end
+
+%Solution as a       min of residual
+[RES,i]=min((ASH1-ASH2).^2);
+% RES
+if debug
+    shockArea=ASH1(i)
+    Mminus=MM(i)
+end
+end
 function display(result)
     global debug
     if debug;fprintf('displaying results...\n');end;
     [n,~]=size(result);
     for i = 1:n 
-        fprintf('\n%24s\t%15.8f\t%s',result{i,:});
+        fprintf('\n%24s\t%15.4g\t%s',result{i,:});
     end
     fprintf('\n')
     if debug;fprintf('done.\n');end;
