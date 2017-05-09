@@ -22,6 +22,19 @@ The purpose of this script is to make it easy to see how tweaks in nozzle geomet
 ### Generating an input file
 TDU loads propellant properties, inlet conditions, and nozzle geometry from a specially formatted tab-delimited text file with the extension `*.tdu`.
 
+In general, the format of an input file is as follows:
+```
+PropellantNameString
+Gamma    MolecularWeight
+T0    P0
+NumberofNodes
+xLocation0    radius0
+xlocation1    radius1
+.    .
+.    .
+.    .
+xlocationN    radiusN
+```
 
 ### Running the script
 * Open `tdu.m` in Matlab 2014 or newer.
