@@ -30,9 +30,9 @@ T0    P0
 NumberofNodes
 xLocation0    radius0
 xlocation1    radius1
-.    .
-.    .
-.    .
+    .            .
+    .            .
+    .            .
 xlocationN    radiusN
 ```
 
