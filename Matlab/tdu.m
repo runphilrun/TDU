@@ -10,7 +10,7 @@ R_0 = 8.3144598; % [J/(mol*K)] universal gas constant
 g_0 = 9.81; % [m/s^2] standard gravity
 unitless='[-]';
 global debug;
-debug = true;
+debug = false;
 %   === THRUSTER PARAMETERS ===
 % IMPORT FROM FILE
 fid  = fopen(filein,'r');
@@ -143,7 +143,7 @@ if debug;fprintf('done.\n');end
 figure
 numplots=4;plotcounter=1;
 subplot(numplots,1,plotcounter)
-plot(xcoord,radius);ylabel('radius');plotcounter=plotcounter+1;axis([0 xcoord(end) 0 inf]);
+plot(xcoord,radius);ylabel('Radius (m)');plotcounter=plotcounter+1;axis([0 xcoord(end) 0 inf]);
 %         subplot(numplots,1,plotcounter)
 %         semilogy(xcoord,A./A_t,xcoord(mark),A(mark)./A_t,'x');ylabel('A/A_t');plotcounter=plotcounter+1;
 subplot(numplots,1,plotcounter)
@@ -335,10 +335,8 @@ end
 %Solution as a       min of residual
 [RES,i]=min((ASH1-ASH2).^2);
 % RES
-if debug
-    shockArea=ASH1(i)
-    Mminus=MM(i)
-end
+shockArea=ASH1(i);
+Mminus=MM(i);
 end
 function display(result)
     global debug
